@@ -1121,45 +1121,72 @@ const soportaWebp = (() => {
 function cargarImagen(url){
   return new Promise((ok, mal) => {
     const i = new Image();
-    i.crossOrigin = "anonymous";          // TMDB responde Access-Control-Allow-Origin: *
     i.onload = () => ok(i);
-    i.onerror = () => mal(new Error("img"));
-    i.src = url;
+    i.onerror = () => mal(new Error("no cargó"));
+    i.src = url;                     // siempre data: o blob:, nunca un dominio remoto
   });
 }
 
+const aBase64 = blob => new Promise((ok, mal) => {
+  const f = new FileReader(); f.onload = () => ok(f.result); f.onerror = mal; f.readAsDataURL(blob);
+});
+
 async function aDataURI(url){
-  // Pide siempre el w500 como fuente, aunque en pantalla se muestre uno más chico.
-  const fuente = String(url).replace(/\/t\/p\/w\d+\//, "/t/p/w500/");
-  const img = await cargarImagen(fuente);
-  if(!img.naturalWidth) throw new Error("vacía");
-  const c = document.createElement("canvas");
-  const esc = Math.min(1, ANCHO_EMBEBIDO / img.naturalWidth);
-  c.width  = Math.max(1, Math.round(img.naturalWidth  * esc));
-  c.height = Math.max(1, Math.round(img.naturalHeight * esc));
-  c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
-  const d = soportaWebp ? c.toDataURL("image/webp", .82) : c.toDataURL("image/jpeg", .85);
-  if(!/^data:image\/(webp|jpeg);base64,/.test(d)) throw new Error("codec");
-  return d;
+  const u = String(url);
+  if(u.startsWith("data:")) return u;
+
+  /* Los bytes se bajan con fetch y recién después se dibujan, desde un blob local.
+     Apuntar el <img> directo al dominio remoto no alcanza: las tarjetas ya mostraron
+     esa misma imagen como background-image sin pedir CORS, el navegador reusa esa
+     copia cacheada sin cabeceras, el canvas queda contaminado y toDataURL falla.
+     Con fetch + cache:"reload" la respuesta llega con CORS, y un blob: es del mismo
+     origen, así que el canvas nunca se ensucia. */
+  const fuente = u.replace(/\/t\/p\/w\d+\//, "/t/p/w500/");
+  const r = await fetch(fuente, u.startsWith("blob:") ? {} : { mode: "cors", cache: "reload" });
+  if(!r.ok) throw new Error("http " + r.status);
+  const blob = await r.blob();
+  if(!blob.size) throw new Error("vacía");
+
+  const local = URL.createObjectURL(blob);
+  try{
+    const img = await cargarImagen(local);
+    if(img.naturalWidth){
+      const c = document.createElement("canvas");
+      const esc = Math.min(1, ANCHO_EMBEBIDO / img.naturalWidth);
+      c.width  = Math.max(1, Math.round(img.naturalWidth  * esc));
+      c.height = Math.max(1, Math.round(img.naturalHeight * esc));
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      const d = soportaWebp ? c.toDataURL("image/webp", .82) : c.toDataURL("image/jpeg", .85);
+      if(/^data:image\/(webp|jpeg);base64,/.test(d)) return d;
+    }
+  }catch(_){ /* si el canvas falla, se incrusta el original sin recomprimir */ }
+  finally{ URL.revokeObjectURL(local); }
+
+  return await aBase64(blob);   // pesa más, pero la copia queda autónoma igual
 }
 
 async function incrustarTodo(){
   // Entran las de TMDB, las hardcodeadas de la Fase 0 y las que soltaste vos (blob:).
   const pend = OBRAS.map(o => [o.n, fotoDe(o)]).filter(([,u]) => u);
   const mapa = new Map();
-  let hechas = 0, fallan = 0;
+  let hechas = 0; const errores = [];
   const lote = 8;
   for(let i = 0; i < pend.length; i += lote){
     await Promise.all(pend.slice(i, i + lote).map(async ([n,u]) => {
       try{ mapa.set(n, await aDataURI(u)); hechas++; }
-      catch(_){ if(!String(u).startsWith("blob:")) mapa.set(n, u); fallan++; }  // si falla, queda el enlace remoto
+      catch(e){
+        if(!String(u).startsWith("blob:")) mapa.set(n, u);   // último recurso: enlace remoto
+        errores.push(n + ": " + (e && e.message ? e.message : e));
+      }
     }));
     const listo = Math.min(i + lote, pend.length);
     aviso("Incrustando imágenes… " + listo + " de " + pend.length);
     const b = document.getElementById("bGuardar");
     if(b) b.textContent = "Incrustando " + Math.round(listo / pend.length * 100) + "%";
   }
-  return { mapa, hechas, fallan };
+  // Un fallo silencioso acá produce una copia "autónoma" que en realidad no lo es.
+  if(errores.length) console.warn("Portadas que no se pudieron incrustar:\n" + errores.join("\n"));
+  return { mapa, hechas, fallan: errores.length, total: pend.length };
 }
 
 /* Trae la hoja de Google Fonts y reemplaza cada .woff2 por su data: URI.
@@ -1347,12 +1374,25 @@ async function guardarCopia(){
   // Autónomo: todo adentro, funciona sin internet.
   const offline = construirCopia({ posters: [...emb.mapa], cssFuentes, modo: "offline" });
 
-  bajar(offline, ARCHIVO_OFFLINE, "text/html;charset=utf-8");
-  setTimeout(() => bajar(liviano, "index.html", "text/html;charset=utf-8"), 500);
-  if(placa) setTimeout(() => bajar(placa, "og-image.jpg"), 1000);
-
   const mb = n => Math.round(n / 1048576 * 10) / 10;
-  aviso("3 archivos: " + ARCHIVO_OFFLINE + " (" + mb(offline.length) + " MB, para mandar por WhatsApp) · " +
+
+  /* Control de calidad ANTES de descargar: la copia autónoma tiene que pesar megabytes.
+     Si sale liviana es que las portadas quedaron como enlace y no funciona sin internet.
+     En ese caso no se baja: un archivo así se comparte creyendo que anda y no anda. */
+  const sano = !emb.fallan && offline.length > 1500000;
+
+  if(sano) bajar(offline, ARCHIVO_OFFLINE, "text/html;charset=utf-8");
+  setTimeout(() => bajar(liviano, "index.html", "text/html;charset=utf-8"), sano ? 500 : 0);
+  if(placa) setTimeout(() => bajar(placa, "og-image.jpg"), sano ? 1000 : 500);
+
+  if(!sano){
+    aviso("⚠ " + emb.fallan + " de " + emb.total + " portadas no se pudieron incrustar: la versión " +
+          "offline no se descargó porque no funcionaría sin internet. index.html y og-image.jpg sí. " +
+          "Abrí la consola (F12) para ver el motivo.");
+    return;
+  }
+
+  aviso("3 archivos: " + ARCHIVO_OFFLINE + " (" + mb(offline.length) + " MB, " + emb.hechas + " portadas adentro) · " +
         "index.html (" + Math.round(liviano.length/1024) + " KB, para publicar)" +
         (placa ? " · og-image.jpg" : "") +
         (URL_PUBLICA ? "" : " · falta completar URL_PUBLICA para la tarjeta de Twitter"));
