@@ -87,6 +87,22 @@ h1 .ucm { display: block; color: transparent; -webkit-text-stroke: 2px var(--roj
 .barra .wrap { padding-top: 12px; padding-bottom: 12px; }
 .fila { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .fila + .fila { margin-top: 9px; }
+.fila-esencial { margin-top: 9px; }
+#bFiltros { display: none; }   /* solo aparece en pantallas chicas */
+
+/* En pantallas anchas los contenedores se disuelven con display:contents y todos
+   los grupos se empaquetan en la menor cantidad de filas posible. Si el buscador
+   se quedara en su propia fila, la barra fija se llevaría un quinto del alto útil. */
+@media (min-width: 1280px) {
+  .barra .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 9px 8px; }
+  .filtros, .fila-esencial, .filtros .fila { display: contents; }
+  .fila-esencial { margin-top: 0; }
+  /* El buscador va primero para aprovechar el hueco que dejaba la fila 1: si
+     queda en su orden natural, empuja al contador a una tercera fila entera. */
+  .busca { order: -1; flex: 1 1 220px; max-width: 420px; }
+  .contador-box { margin-left: auto; }
+  #panelClave { flex: 1 1 100%; }
+}
 .set { display: flex; border: 1px solid var(--borde); border-radius: 2px; overflow: hidden; }
 button, select, input { font-family: var(--cond); font-weight: 600; font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--gris); background: #0D1017; border: 0; padding: 10px 14px; cursor: pointer; transition: .15s; }
 .set button + button { border-left: 1px solid var(--borde); }
@@ -299,19 +315,78 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
 #aviso.ver { opacity: 1; transform: translateX(-50%) translateY(0); }
 .tarj.confoto .cifra { color: rgba(255,255,255,.85); text-shadow: 0 2px 10px rgba(0,0,0,.9); }
 
+/* ── Tablets y notebooks angostas ──────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .stats { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+  .grilla { grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 15px; }
+  .modal-cuerpo p, .modal-cuerpo ul { max-width: none; }
+}
+
+/* ── Barra plegable ─────────────────────────────────────────────────────
+   Arranca en 1100px: así la usan todos los celulares y todos los iPad, incluido
+   el horizontal de 1024. Con la barra desplegada se comía hasta un tercio de la
+   pantalla, y en pantalla táctil los botones grandes se agradecen. */
+@media (max-width: 1279px) {
+  .barra .wrap { display: flex; flex-direction: column; padding-top: 10px; padding-bottom: 10px; }
+  .fila-esencial { order: -1; margin-top: 0; gap: 8px; flex-wrap: nowrap; }
+  #panelClave { order: 1; }
+  #bFiltros { display: inline-flex; align-items: center; flex: 0 0 auto;
+    border: 1px solid var(--borde); border-radius: 2px; padding: 11px 13px; }
+  #bFiltros.on { background: var(--rojo); color: #fff; border-color: var(--rojo); }
+  .busca { min-width: 0; flex: 1; }
+  .busca input { padding: 11px 12px; }
+  .contador-box { order: 2; margin-left: 0; width: 100%; min-width: 0; margin-top: 8px; text-align: left; }
+
+  .filtros { display: none; }
+  .filtros.abierto { display: block; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--borde);
+    max-height: 56vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .filtros .fila { gap: 9px; }
+  /* Los grupos se reparten el ancho y bajan de renglón solos: así entran
+     rótulos largos como "Ramas del multiverso" sin recortarse. */
+  .filtros .set { flex-wrap: wrap; width: 100%; }
+  .filtros .set button { flex: 1 1 0; min-width: 104px; text-align: center; padding: 11px 8px;
+    font-size: 11.5px; letter-spacing: .06em; }
+  .filtros select { width: 100%; padding: 11px 12px; }
+}
+
+/* ── Celulares ─────────────────────────────────────────────────────────── */
 @media (max-width: 720px) {
   .wrap { padding: 0 16px; }
-  .hero { padding: 50px 0 34px; }
+
+  /* El hero ocupaba una pantalla entera antes de mostrar nada. */
+  .hero { padding: 34px 0 24px; }
+  .kicker { font-size: 11px; letter-spacing: .22em; margin-bottom: 12px; gap: 10px; }
+  .kicker::before { width: 26px; }
+  h1 { font-size: clamp(44px, 15vw, 68px); }
+  .sub { margin-top: 12px; font-size: 13px; letter-spacing: .12em; }
+  .intro { font-size: 15px; margin-top: 12px; }
+  .stats { grid-template-columns: repeat(3, 1fr); margin-top: 22px; }
+  .stat { padding: 11px 10px; }
+  .stat .n { font-size: 26px; }
+  .stat .l { font-size: 9.5px; letter-spacing: .1em; margin-top: 3px; }
+
+  /* El rótulo "BUSCAR" sobra: el placeholder ya lo dice y el ancho es oro. */
+  .busca span { display: none; }
+  .fila-esencial { gap: 7px; }
+  .contador { font-size: 11px; margin-bottom: 4px; }
+
   .grilla { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
   .poster .nom { font-size: 14px; }
   .poster .orig { font-size: 10.5px; }
   .poster .cifra { font-size: 58px; }
-  .contador-box { margin-left: 0; width: 100%; margin-top: 10px; text-align: left; }
   .fondo { padding: 0; }
   .modal { border-radius: 0; min-height: 100%; }
   .modal-cabecera { padding: 20px 16px; gap: 14px; }
   .modal-poster { width: 84px; }
   .modal-info-principal h3 { font-size: 24px; }
+  .modal-cuerpo, .modal-pie { padding-left: 16px; padding-right: 16px; }
+  .fichas div { min-width: 50%; }
+  .nav-obras { min-width: 0; }
+  .plataforma { padding: 11px 14px; font-size: 12px; }
+  .apoyo { padding: 16px; }
+  .destino { padding: 40px 18px; }
+  footer { padding-bottom: 40px; }
+
   .grilla.lista .poster { grid-template-columns: 64px 1fr; height: 86px; }
   .grilla.lista .arte, .grilla.lista .foto, .grilla.lista .trama, .grilla.lista .cifra { width: 64px; }
   .grilla.lista .cifra { font-size: 24px; }
@@ -321,6 +396,22 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
   .grilla.lista .aviso { right: 14px; }
   .grilla.lista .tarj.clave .poster::after { left: 48px; }
 }
+
+/* ── Celulares muy angostos (Fold cerrado, modelos viejos de 320) ──────── */
+@media (max-width: 340px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .grilla { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  #bFiltros { padding: 11px 9px; font-size: 11px; }
+  .stat .l { font-size: 9px; }
+}
+
+/* ── Teléfono acostado: la pantalla es bajita, la barra no puede comerla ── */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero { padding: 24px 0 18px; }
+  .filtros.abierto { max-height: 48vh; }
+  #gracias { max-width: 320px; bottom: 12px; }
+}
+
 @media print { .barra, .modal-pie, .hero::before { display: none; } body { background: #fff; color: #000; } }
 </style>
 <meta property="og:type" content="website"><meta property="og:site_name" content="Mapa del UCM"><meta property="og:title" content="Mapa del UCM · Camino a Avengers: Doomsday"><meta property="og:description" content="Las 75 películas, series y especiales que preparan Doomsday: de qué trata cada una, dónde verla en Argentina y cuánto te falta de maratón."><meta property="og:url" content="https://olidiazz.github.io/mapa-ucm/"><meta property="og:image" content="https://olidiazz.github.io/mapa-ucm/og-image.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="es_AR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Mapa del UCM · Camino a Avengers: Doomsday"><meta name="twitter:description" content="Las 75 obras que preparan Doomsday, ordenadas y explicadas. Marcá lo que viste y mirá cuánto te falta."><meta name="twitter:image" content="https://olidiazz.github.io/mapa-ucm/og-image.jpg"><meta name="twitter:creator" content="@Olidiazzz"><meta name="twitter:site" content="@Olidiazzz"><link rel="canonical" href="https://olidiazz.github.io/mapa-ucm/"></head>
@@ -338,6 +429,7 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
 
 <nav class="barra">
   <div class="wrap">
+    <div class="filtros" id="filtros">
     <div class="fila">
       <div class="set" role="group" aria-label="Orden">
         <button class="orden on" data-orden="crono">Cronológico</button>
@@ -374,8 +466,14 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
       </div>
       
       
+    </div>
+    </div>
+
+    <!-- Lo único que queda fijo en el celular: buscar, abrir filtros y ver el progreso. -->
+    <div class="fila fila-esencial">
+      <button id="bFiltros" aria-expanded="false" aria-controls="filtros">☰ Filtros</button>
       <label class="busca"><span>Buscar</span><input id="q" type="search" placeholder="Título, personaje, tema…" autocomplete="off"></label>
-      
+
       <div class="contador-box">
         <div class="contador" id="contador"><b>75</b> títulos · <b>224 h</b> por delante</div>
         <div class="progreso-barra"><div class="progreso-fill" id="barraProgreso" style="width: 0%;"></div></div>
@@ -1897,6 +1995,19 @@ function revisarHitos(){
 
 $("#gracias .cerrar-g").addEventListener("click", () => $("#gracias").classList.remove("ver"));
 $("#bCompartir").addEventListener("click", compartir);
+
+/* Despliegue de filtros en pantallas chicas. En escritorio el botón está oculto
+   por CSS y el panel siempre visible, así que esto no interfiere. */
+$("#bFiltros").addEventListener("click", () => {
+  const panel = $("#filtros"), abierto = panel.classList.toggle("abierto");
+  $("#bFiltros").classList.toggle("on", abierto);
+  $("#bFiltros").setAttribute("aria-expanded", abierto ? "true" : "false");
+  if(abierto) panel.scrollTop = 0;
+});
+
+/* Al elegir un filtro con el teclado del celular abierto, conviene bajarlo
+   para que se vean los resultados. */
+$("#q").addEventListener("search", () => document.activeElement?.blur());
 
 cargarEstado();
 armarApoyo();
