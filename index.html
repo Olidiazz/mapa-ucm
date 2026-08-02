@@ -199,7 +199,9 @@ main { padding: 34px 0 20px; }
 .cerrar:hover { background: var(--rojo); border-color: var(--rojo); }
 
 .fichas { display: flex; flex-wrap: wrap; gap: 0; border-bottom: 1px solid var(--borde); background: #0C0F15; }
-.fichas div { padding: 12px 18px; border-right: 1px solid var(--borde); flex: 1; min-width: 132px; }
+/* Hijo directo: con ".fichas div" el relleno caía también sobre .r y .v,
+   que son divs, y cada rótulo se llevaba 20px de alto de más. */
+.fichas > div { padding: 12px 18px; border-right: 1px solid var(--borde); flex: 1; min-width: 132px; }
 .fichas .r { font-family: var(--cond); font-weight: 600; font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--gris2); }
 .fichas .v { font-family: var(--cond); font-weight: 700; font-size: 15px; letter-spacing: .05em; text-transform: uppercase; margin-top: 3px; }
 .modal-cuerpo { padding: 26px 28px 30px; }
@@ -232,7 +234,9 @@ main { padding: 34px 0 20px; }
 .plataforma.p-para:hover    { background: #062350; border-color: #2a6fd0; }
 .plataforma.p-otro    { background: #14181f; border-color: var(--borde); color: var(--gris); }
 .plataforma.p-otro:hover    { background: #1c222c; border-color: #3c4557; color: var(--blanco); }
-.nota-ver { font-family: var(--cond); font-weight: 600; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--gris2); margin: 10px 0 0; }
+/* Es una aclaración, no un rótulo: en versalitas y a dos renglones pesaba
+   más que el botón que explica. */
+.nota-ver { font-family: var(--body); font-size: 12.5px; line-height: 1.4; color: var(--gris2); margin: 10px 0 0; max-width: 62ch; }
 
 .modal-tramo { font-family: var(--cond); font-weight: 600; font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--gris2); margin-bottom: 8px; }
 .modal-tramo b { color: var(--rojo); font-weight: 700; }
@@ -328,23 +332,28 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
    pantalla, y en pantalla táctil los botones grandes se agradecen. */
 @media (max-width: 1279px) {
   .barra .wrap { display: flex; flex-direction: column; padding-top: 10px; padding-bottom: 10px; }
-  .fila-esencial { order: -1; margin-top: 0; gap: 8px; flex-wrap: nowrap; }
+  .fila-esencial { order: -1; margin-top: 0; gap: 8px; flex-wrap: wrap; align-items: stretch; }
   #panelClave { order: 1; }
-  #bFiltros { display: inline-flex; align-items: center; flex: 0 0 auto;
-    border: 1px solid var(--borde); border-radius: 2px; padding: 11px 13px; }
+  #bFiltros { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;
+    border: 1px solid var(--borde); border-radius: 2px; padding: 0 15px; }
   #bFiltros.on { background: var(--rojo); color: #fff; border-color: var(--rojo); }
-  .busca { min-width: 0; flex: 1; }
+  .busca { min-width: 0; flex: 1 1 140px; }
   .busca input { padding: 11px 12px; }
-  .contador-box { order: 2; margin-left: 0; width: 100%; min-width: 0; margin-top: 8px; text-align: left; }
+  /* Ocupa un renglón entero propio. Con nowrap quedaba encima del buscador. */
+  .contador-box { order: 2; flex: 0 0 100%; margin-left: 0; min-width: 0; margin-top: 9px; text-align: left; }
 
   .filtros { display: none; }
   .filtros.abierto { display: block; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--borde);
-    max-height: 56vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    max-height: 60vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    /* Sin esto la barra de desplazamiento se come el borde derecho de los grupos. */
+    scrollbar-gutter: stable; padding-right: 2px; }
   .filtros .fila { gap: 9px; }
   /* Los grupos se reparten el ancho y bajan de renglón solos: así entran
      rótulos largos como "Ramas del multiverso" sin recortarse. */
   .filtros .set { flex-wrap: wrap; width: 100%; }
-  .filtros .set button { flex: 1 1 0; min-width: 104px; text-align: center; padding: 11px 8px;
+  /* min-width alto a propósito: fuerza dos por renglón, así los grupos de 4
+     quedan en 2×2 en vez de 3+1 con un botón huérfano estirado a lo ancho. */
+  .filtros .set button { flex: 1 1 0; min-width: 140px; text-align: center; padding: 12px 8px;
     font-size: 11.5px; letter-spacing: .06em; }
   .filtros select { width: 100%; padding: 11px 12px; }
 }
@@ -355,13 +364,17 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
 
   /* El hero ocupaba una pantalla entera antes de mostrar nada. */
   .hero { padding: 34px 0 24px; }
-  .kicker { font-size: 11px; letter-spacing: .22em; margin-bottom: 12px; gap: 10px; }
-  .kicker::before { width: 26px; }
+  /* El texto ocupa dos renglones y el guión quedaba colgado solo arriba. */
+  .kicker { font-size: 10.5px; letter-spacing: .18em; margin-bottom: 14px; gap: 10px; line-height: 1.5; }
+  .kicker::before { display: none; }
   h1 { font-size: clamp(44px, 15vw, 68px); }
   .sub { margin-top: 12px; font-size: 13px; letter-spacing: .12em; }
   .intro { font-size: 15px; margin-top: 12px; }
-  .stats { grid-template-columns: repeat(3, 1fr); margin-top: 22px; }
-  .stat { padding: 11px 10px; }
+  /* Cuadrícula 2×2 pareja. "Ya viste" se cae: dice lo mismo que "Completado",
+     y con 5 datos quedaba un recuadro huérfano o celdas de anchos distintos. */
+  .stats { grid-template-columns: repeat(2, 1fr); margin-top: 22px; }
+  .stat.opcional { display: none; }
+  .stat { padding: 13px 12px; }
   .stat .n { font-size: 26px; }
   .stat .l { font-size: 9.5px; letter-spacing: .1em; margin-top: 3px; }
 
@@ -369,6 +382,13 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
   .busca span { display: none; }
   .fila-esencial { gap: 7px; }
   .contador { font-size: 11px; margin-bottom: 4px; }
+
+  /* Aire entre la barra fija y el primer bloque, y la cuenta de títulos
+     alineada bajo su propio título en vez de suelta a la derecha. */
+  main { padding-top: 26px; }
+  .bloque { margin-bottom: 40px; }
+  .bloque-cab { gap: 4px 12px; padding-bottom: 8px; margin-bottom: 18px; }
+  .bloque-cab .cant { margin-left: 0; padding-bottom: 0; flex-basis: 100%; }
 
   .grilla { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
   .poster .nom { font-size: 14px; }
@@ -380,9 +400,25 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
   .modal-poster { width: 84px; }
   .modal-info-principal h3 { font-size: 24px; }
   .modal-cuerpo, .modal-pie { padding-left: 16px; padding-right: 16px; }
-  .fichas div { min-width: 50%; }
+  /* El botón de cerrar pisaba la línea de fase y tramo. */
+  .modal-info-principal { padding-right: 44px; }
+
+  /* Las fichas ocupaban 391px: casi una pantalla entera de datos sueltos antes
+     de poder leer de qué trata. Grilla pareja de dos columnas y renglones justos. */
+  .fichas { display: grid; grid-template-columns: repeat(2, 1fr); }
+  .fichas > div { min-width: 0; flex: none; padding: 11px 14px; border-bottom: 1px solid var(--borde); }
+  .fichas > div:nth-child(2n) { border-right: 0; }
+  .fichas > div:nth-last-child(-n+2) { border-bottom: 0; }
+  .fichas .r { font-size: 9.5px; letter-spacing: .11em; line-height: 1.35; }
+  .fichas .v { font-size: 13.5px; line-height: 1.25; margin-top: 2px; }
   .nav-obras { min-width: 0; }
   .plataforma { padding: 11px 14px; font-size: 12px; }
+  /* Apilado: en una sola fila los botones de anterior/siguiente quedaban en
+     88px y recortaban el título al que llevan. */
+  .modal-pie { flex-direction: column; align-items: stretch; }
+  .modal-pie .marcar { width: 100%; padding: 13px; }
+  .nav-obras { width: 100%; }
+  .nav-obra { padding: 10px 12px; }
   .apoyo { padding: 16px; }
   .destino { padding: 40px 18px; }
   footer { padding-bottom: 40px; }
@@ -408,8 +444,13 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
 /* ── Teléfono acostado: la pantalla es bajita, la barra no puede comerla ── */
 @media (max-height: 500px) and (orientation: landscape) {
   .hero { padding: 24px 0 18px; }
-  .filtros.abierto { max-height: 48vh; }
+  .filtros.abierto { max-height: 46vh; }
   #gracias { max-width: 320px; bottom: 12px; }
+  /* Acostado sobra ancho y falta alto: el progreso vuelve al lado del buscador
+     y la barra baja de dos renglones a uno. */
+  .barra .wrap { padding-top: 7px; padding-bottom: 7px; }
+  .contador-box { flex: 0 1 240px; margin-top: 0; margin-left: auto; align-self: center; }
+  .contador { font-size: 10.5px; margin-bottom: 3px; }
 }
 
 @media print { .barra, .modal-pie, .hero::before { display: none; } body { background: #fff; color: #000; } }
@@ -1560,7 +1601,7 @@ function actualizarContadores(lista) {
   $("#stats").innerHTML=`
     <div class="stat"><div class="n">${OBRAS.length}</div><div class="l">Títulos totales</div></div>
     <div class="stat"><div class="n">${Math.round(minGlobal/60)} h</div><div class="l">Maratón completa</div></div>
-    <div class="stat"><div class="n">${vistosTodo.length}</div><div class="l">Ya viste</div></div>
+    <div class="stat opcional"><div class="n">${vistosTodo.length}</div><div class="l">Ya viste</div></div>
     <div class="stat dest"><div class="n">${porcGlobal}%</div><div class="l">Completado</div></div>
     <div class="stat dest"><div class="n">${diasRestantes()}</div><div class="l">Días para Doomsday</div></div>`;
 }
