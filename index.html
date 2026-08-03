@@ -610,7 +610,7 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
          Todo lo demás se despliega, para que la barra no compita con el mapa. -->
     <div class="fila fila-esencial">
       <label class="busca"><span>Buscar</span><input id="q" type="search" placeholder="Título, personaje, tema…" autocomplete="off"></label>
-      <button id="bFiltros" aria-expanded="true" aria-controls="filtros" class="on">☰ Filtros</button>
+      <button id="bFiltros" aria-expanded="false" aria-controls="filtros" class="">☰ Filtros</button>
       <div class="menu-caja">
         <button id="bMaraton" aria-expanded="false" aria-controls="menuMaraton" class="">Mi maratón ▾</button>
         <div class="menu" id="menuMaraton" hidden="">
@@ -630,7 +630,7 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
     <!-- Panel de filtros: cada grupo con su rótulo, porque una pared de
          botones sin etiquetar no se lee. Acumulables: dentro de un grupo
          suman, entre grupos restringen. -->
-    <div class="filtros" id="filtros">
+    <div class="filtros" id="filtros" hidden="">
       <div class="fgrupo">
         <span class="frotulo">Recorrido</span>
         <select id="rutaSel" aria-label="Recorrido"><option value="completa">Todo el UCM · 120</option><option value="doomsday">★ Camino a Doomsday · 20</option><option value="spiderman">Spider-Man · 14</option><option value="mutantes">Mutantes · 16</option><option value="multiverso">El multiverso · 11</option><option value="cosmico">Cósmico · 10</option><option value="defenders">The Defenders Saga · 6</option></select>
@@ -1985,6 +1985,17 @@ function construirCopia({ posters, cssFuentes, modo }){
   ["#lienzo","#stats","#modal","#aviso"].forEach(sel => { const el = doc.querySelector(sel); if(el) el.innerHTML = ""; });
   doc.querySelector("#fondo")?.classList.remove("abierto");
   doc.querySelector("#gracias")?.classList.remove("ver");
+
+  /* La copia arranca siempre con todo plegado. Sin esto, el estado de la
+     pantalla al momento de exportar queda congelado en el archivo: si tenías
+     los filtros abiertos, el sitio publicado abre con la barra desplegada. */
+  ["#filtros","#menuMaraton","#panelClave"].forEach(sel => {
+    const el = doc.querySelector(sel); if(el) el.hidden = true;
+  });
+  ["#bFiltros","#bMaraton"].forEach(sel => {
+    const b = doc.querySelector(sel);
+    if(b){ b.classList.remove("on"); b.setAttribute("aria-expanded", "false"); }
+  });
 
   // Ninguna herramienta de edición viaja en la copia.
   ["#toolsSet","#bTmdb","#bCarpeta","#bGuardar","#panelClave","#fArch"]
