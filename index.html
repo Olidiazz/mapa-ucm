@@ -3,7 +3,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MAPA DEL UCM · Camino a Avengers: Doomsday</title>
-<meta name="description" content="Las 93 películas, series y especiales que preparan Avengers: Doomsday: el UCM completo más los X-Men de Fox, la etapa Netflix y el universo de Sony. Con dónde ver cada una en Argentina y seguimiento de tu maratón.">
+<meta name="description" content="Las 120 películas y series de Marvel en pantalla, de Howard el pato a Avengers: Doomsday. El UCM completo más X-Men, Netflix, Spider-Verse, Blade y el universo de Sony. Con dónde ver cada una en Argentina y seguimiento de tu maratón.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2307080B'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%23E8232A' stroke-width='5'/%3E%3Ccircle cx='32' cy='32' r='7' fill='%23E8232A'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -31,6 +31,9 @@
   --body: "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 * { box-sizing: border-box; }
+/* Cualquier display explícito le gana al atributo hidden y el elemento sigue a
+   la vista. Con paneles que son grid o flex, esto no es opcional. */
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
 body {
   margin: 0; background: var(--negro); color: var(--blanco);
@@ -122,28 +125,59 @@ h1 .ucm { display: block; color: transparent; -webkit-text-stroke: 2px var(--roj
 .barra .wrap { padding-top: 12px; padding-bottom: 12px; }
 .fila { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .fila + .fila { margin-top: 9px; }
-.fila-esencial { margin-top: 9px; }
-#bFiltros { display: none; }   /* solo aparece en pantallas chicas */
+.fila-esencial { margin-top: 0; gap: 8px; align-items: stretch; }
+.busca { flex: 1 1 200px; max-width: 480px; }
+.contador-box { margin-left: auto; }
+
+/* Los dos botones que abren algo. Se ven iguales a propósito: son la misma
+   clase de gesto, desplegar lo que está guardado. */
+#bFiltros, #bMaraton { display: inline-flex; align-items: center; justify-content: center;
+  flex: 0 0 auto; border: 1px solid var(--borde); border-radius: 2px; padding: 0 16px; white-space: nowrap; }
+#bFiltros.on, #bMaraton.on { background: var(--rojo); color: #fff; border-color: var(--rojo); }
+
+/* ── Panel de filtros ───────────────────────────────────────────────────
+   Cerrado por omisión en todos los tamaños. Con 120 títulos hay siete grupos
+   de filtros: desplegados de una son una pared que compite con el mapa. */
+.filtros { margin-top: 12px; padding-top: 13px; border-top: 1px solid var(--borde);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(330px, 100%), 1fr)); gap: 11px 30px; }
+.fgrupo { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+/* Rótulo de ancho fijo: alinea los grupos en columna y convierte una pared de
+   botones en algo que se puede recorrer con la vista. */
+.frotulo { flex: 0 0 78px; font-family: var(--cond); font-weight: 700; font-size: 10.5px;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--gris2); }
+.fgrupo .set, .fgrupo select { flex: 1 1 auto; min-width: 0; }
+.fpie { grid-column: 1 / -1; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  border-top: 1px solid var(--borde); padding-top: 12px; margin-top: 2px; }
+
+/* ── Menú de la maratón ─────────────────────────────────────────────────
+   Compartir, tarjeta, código y reiniciar se usan una vez por sesión: no
+   merecen estar ocupando la barra todo el tiempo. */
+.menu-caja { position: relative; flex: 0 0 auto; }
+.menu { position: absolute; top: calc(100% + 7px); right: 0; z-index: 90; min-width: 272px;
+  background: #12161E; border: 1px solid var(--borde); border-radius: 3px; padding: 6px;
+  display: flex; flex-direction: column; box-shadow: 0 20px 44px rgba(0,0,0,.65); }
+.menu button { width: 100%; text-align: left; background: none; border: 0; border-radius: 2px;
+  padding: 11px 13px; letter-spacing: .08em; }
+.menu button:hover { background: #1D2432; color: var(--blanco); }
+.menu .peligro { color: #E8737A; }
+.menu .peligro:hover { background: var(--rojo-osc); color: #fff; }
 
 /* En pantallas anchas los contenedores se disuelven con display:contents y todos
    los grupos se empaquetan en la menor cantidad de filas posible. Si el buscador
    se quedara en su propia fila, la barra fija se llevaría un quinto del alto útil. */
-@media (min-width: 1280px) {
-  .barra .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 9px 8px; }
-  .filtros, .fila-esencial, .filtros .fila { display: contents; }
-  .fila-esencial { margin-top: 0; }
-  /* El buscador va primero para aprovechar el hueco que dejaba la fila 1: si
-     queda en su orden natural, empuja al contador a una tercera fila entera. */
-  .busca { order: -1; flex: 1 1 220px; max-width: 420px; }
-  .contador-box { margin-left: auto; }
-  #panelClave { flex: 1 1 100%; }
-}
 .set { display: flex; border: 1px solid var(--borde); border-radius: 2px; overflow: hidden; }
 button, select, input { font-family: var(--cond); font-weight: 600; font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--gris); background: #0D1017; border: 0; padding: 10px 14px; cursor: pointer; transition: .15s; }
 .set button + button { border-left: 1px solid var(--borde); }
 button:hover, select:hover { color: var(--blanco); background: #161B24; }
 button.on { background: var(--rojo); color: #fff; }
 select { border: 1px solid var(--borde); border-radius: 2px; }
+/* Limpiar filtros: presente cuando hace falta, invisible cuando no. */
+.limpiar { border: 1px solid var(--rojo-osc); border-radius: 2px; color: #E8737A; background: #1A0709; }
+.limpiar:hover { background: var(--rojo); border-color: var(--rojo); color: #fff; }
+/* Un filtro acumulable prendido se ve macizo: hay que poder contarlos de un vistazo. */
+.f-op.on { background: var(--blanco); color: var(--negro); }
+.f-op.on:hover { background: #fff; color: var(--negro); }
+
 .busca { display: flex; align-items: center; border: 1px solid var(--borde); background: #0D1017; flex: 1; min-width: 200px; border-radius: 2px; }
 .busca span { font-family: var(--cond); font-weight: 600; font-size: 11px; letter-spacing: .2em; color: var(--gris2); padding-left: 13px; text-transform: uppercase; }
 .busca input { flex: 1; background: transparent; text-transform: none; letter-spacing: .01em; font-family: var(--body); font-weight: 400; font-size: 14.5px; color: var(--blanco); padding: 10px 12px; }
@@ -408,32 +442,30 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
    Arranca en 1100px: así la usan todos los celulares y todos los iPad, incluido
    el horizontal de 1024. Con la barra desplegada se comía hasta un tercio de la
    pantalla, y en pantalla táctil los botones grandes se agradecen. */
-@media (max-width: 1279px) {
-  .barra .wrap { display: flex; flex-direction: column; padding-top: 10px; padding-bottom: 10px; }
-  .fila-esencial { order: -1; margin-top: 0; gap: 8px; flex-wrap: wrap; align-items: stretch; }
-  #panelClave { order: 1; }
-  #bFiltros { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;
-    border: 1px solid var(--borde); border-radius: 2px; padding: 0 15px; }
-  #bFiltros.on { background: var(--rojo); color: #fff; border-color: var(--rojo); }
-  .busca { min-width: 0; flex: 1 1 140px; }
-  .busca input { padding: 11px 12px; }
-  /* Ocupa un renglón entero propio. Con nowrap quedaba encima del buscador. */
-  .contador-box { order: 2; flex: 0 0 100%; margin-left: 0; min-width: 0; margin-top: 9px; text-align: left; }
+/* El panel abierto no puede tapar el mapa: se limita y se desplaza solo. */
+.filtros { max-height: min(52vh, 440px); overflow-y: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable; padding-right: 2px; }
 
-  .filtros { display: none; }
-  .filtros.abierto { display: block; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--borde);
-    max-height: 60vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
-    /* Sin esto la barra de desplazamiento se come el borde derecho de los grupos. */
-    scrollbar-gutter: stable; padding-right: 2px; }
-  .filtros .fila { gap: 9px; }
-  /* Los grupos se reparten el ancho y bajan de renglón solos: así entran
-     rótulos largos como "Ramas del multiverso" sin recortarse. */
-  .filtros .set { flex-wrap: wrap; width: 100%; }
-  /* min-width alto a propósito: fuerza dos por renglón, así los grupos de 4
-     quedan en 2×2 en vez de 3+1 con un botón huérfano estirado a lo ancho. */
-  .filtros .set button { flex: 1 1 0; min-width: 140px; text-align: center; padding: 12px 8px;
+@media (max-width: 1023px) {
+  .barra .wrap { padding-top: 10px; padding-bottom: 10px; }
+  .fila-esencial { flex-wrap: wrap; }
+  .busca { min-width: 0; flex: 1 1 140px; max-width: none; }
+  .busca input { padding: 11px 12px; }
+  /* Renglón entero propio: apretado contra los botones no se lee. */
+  .contador-box { order: 2; flex: 0 0 100%; margin-left: 0; min-width: 0; margin-top: 9px; text-align: left; }
+  .menu { left: 0; right: auto; }
+
+  /* Una columna, el rótulo arriba y los botones repartiéndose el ancho:
+     en táctil conviene el botón grande antes que la línea compacta. */
+  .filtros { grid-template-columns: 1fr; gap: 13px; }
+  .fgrupo { align-items: flex-start; gap: 7px; flex-direction: column; }
+  .frotulo { flex: none; }
+  .fgrupo .set { flex-wrap: wrap; width: 100%; }
+  /* 96px deja entrar tres cortos por renglón y sigue siendo cómodo al tacto.
+     Con 128 las siete fases ocupaban cuatro renglones. */
+  .fgrupo .set button { flex: 1 1 0; min-width: 96px; text-align: center; padding: 12px 8px;
     font-size: 11.5px; letter-spacing: .06em; }
-  .filtros select { width: 100%; padding: 11px 12px; }
+  .fgrupo select { width: 100%; padding: 11px 12px; }
 }
 
 /* ── Celulares ─────────────────────────────────────────────────────────── */
@@ -522,7 +554,9 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
 /* ── Teléfono acostado: la pantalla es bajita, la barra no puede comerla ── */
 @media (max-height: 500px) and (orientation: landscape) {
   .hero { padding: 24px 0 18px; }
-  .filtros.abierto { max-height: 46vh; }
+  /* En pantallas bajas el panel no puede tapar el mapa entero: se recorta
+     y se desplaza, así siempre se ven tarjetas atrás. */
+  .filtros { max-height: 42vh; }
   #gracias { max-width: 320px; bottom: 12px; }
   /* Acostado sobra ancho y falta alto: el progreso vuelve al lado del buscador
      y la barra baja de dos renglones a uno. */
@@ -533,19 +567,19 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
 
 @media print { .barra, .modal-pie, .hero::before { display: none; } body { background: #fff; color: #000; } }
 </style>
-<meta property="og:type" content="website"><meta property="og:site_name" content="Mapa del UCM"><meta property="og:title" content="Mapa del UCM · Camino a Avengers: Doomsday"><meta property="og:description" content="Las 93 películas, series y especiales que preparan Doomsday: de qué trata cada una, dónde verla en Argentina y cuánto te falta de maratón."><meta property="og:url" content="https://olidiazz.github.io/mapa-ucm/"><meta property="og:image" content="https://olidiazz.github.io/mapa-ucm/og-image.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="es_AR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Mapa del UCM · Camino a Avengers: Doomsday"><meta name="twitter:description" content="Las 93 obras que preparan Doomsday, ordenadas y explicadas. Marcá lo que viste y mirá cuánto te falta."><meta name="twitter:image" content="https://olidiazz.github.io/mapa-ucm/og-image.jpg"><meta name="twitter:creator" content="@Olidiazzz"><meta name="twitter:site" content="@Olidiazzz"><link rel="canonical" href="https://olidiazz.github.io/mapa-ucm/"></head>
+<meta property="og:type" content="website"><meta property="og:site_name" content="Mapa del UCM"><meta property="og:title" content="Mapa del UCM · Camino a Avengers: Doomsday"><meta property="og:description" content="Las 120 películas, series y especiales que preparan Doomsday: de qué trata cada una, dónde verla en Argentina y cuánto te falta de maratón."><meta property="og:url" content="https://olidiazz.github.io/mapa-ucm/"><meta property="og:image" content="https://olidiazz.github.io/mapa-ucm/og-image.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="es_AR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Mapa del UCM · Camino a Avengers: Doomsday"><meta name="twitter:description" content="Las 120 obras que preparan Doomsday, ordenadas y explicadas. Marcá lo que viste y mirá cuánto te falta."><meta name="twitter:image" content="https://olidiazz.github.io/mapa-ucm/og-image.jpg"><meta name="twitter:creator" content="@Olidiazzz"><meta name="twitter:site" content="@Olidiazzz"><link rel="canonical" href="https://olidiazz.github.io/mapa-ucm/"></head>
 <body>
 
 <header class="hero">
   <div class="wrap">
-    <div class="kicker">Saga del Multiverso · Fases 1 a 6 · <span id="kickerDias">FALTAN 137 DÍAS</span></div>
+    <div class="kicker">Saga del Multiverso · Fases 1 a 6 · <span id="kickerDias">FALTAN 136 DÍAS</span></div>
     <h1>Mapa del<span class="ucm">UCM</span></h1>
     <div class="sub" id="heroSub">La guía definitiva del <b>Universo Cinematográfico de Marvel</b></div>
 
     <div class="modos" role="group" aria-label="Modo de lectura">
       <button class="modo on" data-modo="completa">
         <span class="m-t">Guía completa</span>
-        <span class="m-d" id="modoCompletaDato">93 títulos · 391 h</span>
+        <span class="m-d" id="modoCompletaDato">120 títulos · 626 h</span>
       </button>
       <button class="modo" data-modo="doomsday">
         <span class="m-t">★ Camino a Doomsday</span>
@@ -553,7 +587,7 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
       </button>
     </div>
 
-    <p class="intro" id="heroIntro">Las <strong>93 películas, series y especiales</strong> que preparan el terreno para el gran choque del 18 de diciembre de 2026: el UCM completo, más los <strong>X-Men de Fox</strong>, la etapa <strong>Netflix</strong> y el universo de <strong>Sony</strong>. Están ordenadas por cronología interna o por fecha de estreno. Tocá cualquier título para ver de qué trata y <strong>marcá lo que ya viste</strong> para hacer un seguimiento de tu maratón.</p>
+    <p class="intro" id="heroIntro">Las <strong>120 películas y series</strong> de Marvel en pantalla, de <em>Howard el pato</em> en 1986 al choque del 18 de diciembre de 2026: el UCM completo, más los <strong>X-Men de Fox</strong>, la etapa <strong>Netflix</strong>, el <strong>Spider-Verse</strong>, <strong>Blade</strong> y el universo de <strong>Sony</strong>. Son muchas, así que los <strong>filtros se acumulan</strong>: podés pedir películas de la Fase 4 que te falten, y sacarlos todos de una con un botón.</p>
     <div class="stats" id="stats"></div>
 
     <div class="calc" id="calc">
@@ -565,63 +599,96 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
           <button class="calc-b" data-paso="1" aria-label="Más horas">+</button>
         </div>
       </div>
-      <div class="calc-r" id="calcSalida">Terminás el <b>14 de febrero de 2027</b> · <span class="mal">te pasás 58 días</span> · necesitás 2.9 h por día</div>
+      <div class="calc-r" id="calcSalida">Terminás el <b>13 de junio de 2027</b> · <span class="mal">te pasás 177 días</span> · necesitás 4.6 h por día</div>
     </div>
   </div>
 </header>
 
 <nav class="barra">
   <div class="wrap">
-    <div class="filtros" id="filtros">
-    <div class="fila">
-      <div class="set" role="group" aria-label="Orden">
-        <button class="orden on" data-orden="crono">Cronológico</button>
-        <button class="orden" data-orden="estreno">Por estreno</button>
-      </div>
-      <div class="set" role="group" aria-label="Tipo">
-        <button class="tipo on" data-tipo="todo">Todo</button>
-        <button class="tipo" data-tipo="pelicula">Películas</button>
-        <button class="tipo" data-tipo="serie">Series</button>
-        <button class="tipo" data-tipo="especial">Especiales</button>
-      </div>
-      <select id="rutaSel" aria-label="Recorrido"><option value="completa">Todo el UCM · 93</option><option value="doomsday">★ Camino a Doomsday · 20</option><option value="spiderman">Spider-Man · 14</option><option value="mutantes">Mutantes · 16</option><option value="multiverso">El multiverso · 11</option><option value="cosmico">Cósmico · 10</option><option value="defenders">The Defenders Saga · 6</option></select>
-      <select id="fase" aria-label="Fase">
-        <option value="todo">Todas las fases</option>
-        <option value="0">Legado · Fox, Netflix y Sony</option>
-        <option value="1">Fase 1</option><option value="2">Fase 2</option><option value="3">Fase 3</option>
-        <option value="4">Fase 4</option><option value="5">Fase 5</option><option value="6">Fase 6</option>
-      </select>
-      <div class="set" role="group" aria-label="Vista">
-        <button class="vista on" data-vista="mosaico">Mosaico</button>
-        <button class="vista" data-vista="lista">Lista</button>
-      </div>
-    </div>
-    <div class="fila">
-      <div class="set" role="group" aria-label="Continuidad">
-        <button class="canon on" data-canon="todo">Toda la línea</button>
-        <button class="canon" data-canon="principal">Línea principal</button>
-        <button class="canon" data-canon="rama">Ramas del multiverso</button>
-      </div>
-      <div class="set">
-        <button id="bSpoiler" class="on">Spoilers tapados</button>
-        <button id="bReiniciar" title="Borra todos los títulos marcados como vistos">↺ Reiniciar maratón</button>
-        <button id="bCompartir" title="Compartí cómo vas con tu maratón">↗ Compartir</button>
-        <button id="bTarjeta" title="Generá una imagen con tu progreso para adjuntar al tuit">🖼 Mi tarjeta</button>
-        <button id="bCodigo" title="Llevá tu progreso a otro celular o computadora">🔑 Mi código</button>
-      </div>
-      
-      
-    </div>
-    </div>
-
-    <!-- Lo único que queda fijo en el celular: buscar, abrir filtros y ver el progreso. -->
+    <!-- Lo único siempre visible: buscar, abrir filtros, ver el progreso.
+         Todo lo demás se despliega, para que la barra no compita con el mapa. -->
     <div class="fila fila-esencial">
-      <button id="bFiltros" aria-expanded="false" aria-controls="filtros">☰ Filtros</button>
       <label class="busca"><span>Buscar</span><input id="q" type="search" placeholder="Título, personaje, tema…" autocomplete="off"></label>
+      <button id="bFiltros" aria-expanded="true" aria-controls="filtros" class="on">☰ Filtros</button>
+      <div class="menu-caja">
+        <button id="bMaraton" aria-expanded="false" aria-controls="menuMaraton" class="">Mi maratón ▾</button>
+        <div class="menu" id="menuMaraton" hidden="">
+          <button id="bCompartir">↗ Compartir cómo voy</button>
+          <button id="bTarjeta">🖼 Bajar mi tarjeta</button>
+          <button id="bCodigo">🔑 Llevar mi progreso a otro dispositivo</button>
+          <button id="bReiniciar" class="peligro">↺ Reiniciar maratón</button>
+        </div>
+      </div>
 
       <div class="contador-box">
-        <div class="contador" id="contador"><b>93</b> títulos · <b>391 h</b> por delante</div>
+        <div class="contador" id="contador"><b>120</b> títulos · <b>626 h</b> por delante</div>
         <div class="progreso-barra"><div class="progreso-fill" id="barraProgreso" style="width: 0%;"></div></div>
+      </div>
+    </div>
+
+    <!-- Panel de filtros: cada grupo con su rótulo, porque una pared de
+         botones sin etiquetar no se lee. Acumulables: dentro de un grupo
+         suman, entre grupos restringen. -->
+    <div class="filtros" id="filtros">
+      <div class="fgrupo">
+        <span class="frotulo">Recorrido</span>
+        <select id="rutaSel" aria-label="Recorrido"><option value="completa">Todo el UCM · 120</option><option value="doomsday">★ Camino a Doomsday · 20</option><option value="spiderman">Spider-Man · 14</option><option value="mutantes">Mutantes · 16</option><option value="multiverso">El multiverso · 11</option><option value="cosmico">Cósmico · 10</option><option value="defenders">The Defenders Saga · 6</option></select>
+      </div>
+      <div class="fgrupo">
+        <span class="frotulo">Formato</span>
+        <div class="set" role="group" aria-label="Formato">
+          <button class="f-op" data-grupo="tipo" data-valor="pelicula" aria-pressed="false">Películas</button>
+          <button class="f-op" data-grupo="tipo" data-valor="serie" aria-pressed="false">Series</button>
+          <button class="f-op" data-grupo="tipo" data-valor="especial" aria-pressed="false">Especiales</button>
+        </div>
+      </div>
+      <div class="fgrupo">
+        <span class="frotulo">Estado</span>
+        <div class="set" role="group" aria-label="Estado">
+          <button class="f-op" data-grupo="estado" data-valor="pendiente" aria-pressed="false">Me faltan</button>
+          <button class="f-op" data-grupo="estado" data-valor="visto" aria-pressed="false">Ya vi</button>
+        </div>
+      </div>
+      <div class="fgrupo">
+        <span class="frotulo">Continuidad</span>
+        <div class="set" role="group" aria-label="Continuidad">
+          <button class="f-op" data-grupo="canon" data-valor="principal" aria-pressed="false">Línea principal</button>
+          <button class="f-op" data-grupo="canon" data-valor="rama" aria-pressed="false">Ramas del multiverso</button>
+        </div>
+      </div>
+      <div class="fgrupo">
+        <span class="frotulo">Fase</span>
+        <div class="set" role="group" aria-label="Fase">
+          <button class="f-op" data-grupo="fase" data-valor="0" aria-pressed="false">Legado</button>
+          <button class="f-op" data-grupo="fase" data-valor="1" aria-pressed="false">1</button>
+          <button class="f-op" data-grupo="fase" data-valor="2" aria-pressed="false">2</button>
+          <button class="f-op" data-grupo="fase" data-valor="3" aria-pressed="false">3</button>
+          <button class="f-op" data-grupo="fase" data-valor="4" aria-pressed="false">4</button>
+          <button class="f-op" data-grupo="fase" data-valor="5" aria-pressed="false">5</button>
+          <button class="f-op" data-grupo="fase" data-valor="6" aria-pressed="false">6</button>
+        </div>
+      </div>
+      <div class="fgrupo">
+        <span class="frotulo">Orden</span>
+        <div class="set" role="group" aria-label="Orden">
+          <button class="orden on" data-orden="crono">Cronológico</button>
+          <button class="orden" data-orden="estreno">Por estreno</button>
+        </div>
+      </div>
+      <div class="fgrupo">
+        <span class="frotulo">Vista</span>
+        <div class="set" role="group" aria-label="Vista">
+          <button class="vista on" data-vista="mosaico">Mosaico</button>
+          <button class="vista" data-vista="lista">Lista</button>
+          <button id="bSpoiler" class="on">Spoilers tapados</button>
+        </div>
+      </div>
+
+      <div class="fpie">
+        <button id="bLimpiar" class="limpiar" hidden="">✕ Limpiar búsqueda</button>
+        
+        
       </div>
     </div>
 
@@ -637,7 +704,7 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
     <div class="kicker">Punto de convergencia</div>
     <h2>Avengers<br>Doomsday</h2>
     <p>18 de diciembre de 2026 · Fase 6 · dirigen Anthony y Joe Russo. Tres universos chocan: los héroes del UCM, los Cuatro Fantásticos de la Tierra‑828 y los X‑Men del cine de Fox, con Robert Downey Jr. como Víctor von Doom. Todo lo que está arriba desemboca acá.</p>
-    <div class="reloj" id="reloj">Faltan 137 días</div>
+    <div class="reloj" id="reloj">Faltan 136 días</div>
   </section>
 
   <footer>
@@ -660,6 +727,7 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
       <section>
         <h4>2 · Marcá lo que ya viste</h4>
         <p>Tocá cualquier título y usá <strong>Marcar como visto</strong>. Queda guardado en este navegador, así que podés cerrar todo y seguir mañana. La barra de arriba te dice cuánto te falta en tiempo real.</p>
+        <p>En <strong>Filtros</strong> podés dejar solo lo que <strong>te falta</strong> —para no volver a mirar lo que ya viste— o solo lo que <strong>ya viste</strong>, si querés repasar por dónde venís.</p>
         <p><strong>Si querés seguir en otro celular o computadora</strong>, tocá <strong>🔑 Mi código</strong>: te da un código corto que pegás del otro lado y recuperás tu maratón. Conviene guardarlo en algún lado, sobre todo en iPhone: Safari borra los datos de los sitios que no visitás por una semana.</p>
       </section>
 
@@ -1179,7 +1247,147 @@ const OBRAS = [
 {n:93,t:"The Punisher",tp:"serie",ep:26,dur:1352,f:0,e:"2017-11-17",m:"Disney+",c:"principal",era:"2017 – 2019",g:3,ti:67178,tt:"tv",img:"https://image.tmdb.org/t/p/w500/tM6xqRKXoloH9UchaJEyyRE9O1w.jpg",
  r:"Frank Castle desarma la conspiración militar que hay detrás del asesinato de su familia.",
  d:["Jon Bernthal había debutado como Frank en la segunda temporada de Daredevil.","Es la última serie de Marvel en Netflix antes de que se cortara el acuerdo."],
- i:"Bernthal sigue siendo Frank Castle: vuelve en Born Again, en el especial One Last Kill y en Spider-Man: Un Nuevo Día."}
+ i:"Bernthal sigue siendo Frank Castle: vuelve en Born Again, en el especial One Last Kill y en Spider-Man: Un Nuevo Día."},
+
+/* ── Spider-Verse (animación de Sony) ─────────────────────────────────── */
+{n:94,t:"Spider-Man: Un nuevo universo",to:"Spider-Man: Into the Spider-Verse",tp:"pelicula",dur:117,f:0,e:"2018-12-14",m:"Cine",c:"rama",era:"2018 · Tierra-1610",g:4,ti:324857,tt:"movie",img:"https://image.tmdb.org/t/p/w500/iiZZdoQBEYBv6id8su7ImL0oCbD.jpg",
+ r:"Miles Morales es mordido por una araña radiactiva y termina compartiendo Brooklyn con Spider-Men de otras dimensiones.",
+ d:["Ganó el Oscar a mejor película animada y reinventó el lenguaje visual del cine de superhéroes.","Es la primera vez que el multiverso araña llega al cine, tres años antes que Sin camino a casa."],
+ i:"Instaló la idea de que hay un Spider-Man por universo, que es la premisa de la que vive todo el cruce multiversal posterior."},
+
+{n:95,t:"Spider-Man: Cruzando el multiverso",to:"Spider-Man: Across the Spider-Verse",tp:"pelicula",dur:140,f:0,e:"2023-06-02",m:"Cine",c:"rama",era:"2023 · Tierra-1610 y otras",g:5,ti:569094,tt:"movie",img:"https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg",
+ r:"Miles descubre la Sociedad Arácnida y se entera de que hay reglas del canon que él no está dispuesto a aceptar.",
+ d:["Cada universo está dibujado con una técnica distinta.","Termina en suspenso: el cierre llega recién con Beyond the Spider-Verse."],
+ i:"Convierte las «reglas del canon» en el tema central del multiverso, el mismo debate que atraviesa la Saga."},
+
+/* ── Universo Spider-Man de Sony (imagen real) ─────────────────────────── */
+{n:96,t:"Morbius",tp:"pelicula",dur:105,f:0,e:"2022-04-01",m:"Cine",c:"rama",era:"2022 · Universo de Sony",g:4,ti:526896,tt:"movie",img:"https://image.tmdb.org/t/p/w500/Av8Z2jZhEm1FLkFzMThzz9hndJF.jpg",
+ r:"Un hematólogo con una enfermedad terminal se cura con sangre de murciélago y se transforma en algo parecido a un vampiro.",
+ d:["Su escena post-créditos trae al Buitre de Michael Keaton desde el UCM sin explicar cómo.","Es la película peor recibida de todo el universo Sony."],
+ i:"Es el intento más torpe de conectar el universo de Sony con el UCM, y explica por qué después dejaron de hacerlo."},
+
+{n:97,t:"Madame Web",tp:"pelicula",dur:117,f:0,e:"2024-02-14",m:"Cine",c:"rama",era:"2003 · Universo de Sony",g:1,ti:634492,tt:"movie",img:"https://image.tmdb.org/t/p/w500/rULWuutDcN5NvtiZi4FRPzRYWSh.jpg",
+ r:"Una paramédica de Nueva York empieza a ver el futuro y termina protegiendo a tres chicas destinadas a ser arañas.",
+ d:["Transcurre en 2003, antes que el resto del universo de Sony.","La tía May de este universo es hermana del padre de Peter, que todavía no nació."],
+ i:"Ubica el origen de las arañas de Sony décadas antes, sin cruzarse en ningún momento con el UCM."},
+
+{n:98,t:"Kraven el cazador",to:"Kraven the Hunter",tp:"pelicula",dur:127,f:0,e:"2024-12-13",m:"Cine",c:"rama",era:"2024 · Universo de Sony",g:5,ti:539972,tt:"movie",img:"https://image.tmdb.org/t/p/w500/1GvBhRxY6MELDfxFrete6BNhBB5.jpg",
+ r:"Sergei Kravinoff sobrevive a un ataque de león, recibe habilidades animales y se convierte en el mejor cazador del mundo.",
+ d:["Es la última película del universo Spider-Man de Sony antes de que el estudio frenara la línea.","Clasificación R, con Aaron Taylor-Johnson como protagonista."],
+ i:"Cierra la etapa de Sony construyendo villanos de Spider-Man sin Spider-Man, un experimento que no volvió a repetirse."},
+
+/* ── Los 4 Fantásticos de Fox ──────────────────────────────────────────── */
+{n:99,t:"Los 4 Fantásticos",to:"Fantastic Four",tp:"pelicula",dur:106,f:0,e:"2005-07-08",m:"Cine",c:"rama",era:"2005 · universo Fox",g:1,ti:9738,tt:"movie",img:"https://image.tmdb.org/t/p/w500/4YMcYEFS8sFuW3soP1HVmgR3cSm.jpg",
+ r:"Una tormenta cósmica le da poderes a cuatro astronautas y a Victor von Doom, que elige usarlos para dominar.",
+ d:["Chris Evans es la Antorcha Humana acá, tres años antes de ser el Capitán América.","Primera versión de Doctor Doom en el cine."],
+ i:"Es el antecedente directo del personaje que Robert Downey Jr. interpreta en Doomsday: sirve para medir cuánto cambió la idea de Doom."},
+
+{n:100,t:"Los 4 Fantásticos y Silver Surfer",to:"Fantastic Four: Rise of the Silver Surfer",tp:"pelicula",dur:92,f:0,e:"2007-06-15",m:"Cine",c:"rama",era:"2007 · universo Fox",g:1,ti:1979,tt:"movie",img:"https://image.tmdb.org/t/p/w500/9wRfzTcMyyzkQxVDqBHv8RwuZOv.jpg",
+ r:"Un heraldo plateado anuncia la llegada de Galactus mientras la Primera Familia intenta tener una boda normal.",
+ d:["Primera aparición de Silver Surfer en el cine.","Su Galactus es una nube cósmica, decisión que la versión de 2025 corrige."],
+ i:"Es el punto de comparación obvio con Primeros pasos: mismos personajes, mismo villano, treinta años de distancia en el resultado."},
+
+{n:101,t:"Cuatro Fantásticos",to:"Fant4stic",tp:"pelicula",dur:100,f:0,e:"2015-08-07",m:"Cine",c:"rama",era:"2015 · universo Fox",g:3,ti:166424,tt:"movie",img:"https://image.tmdb.org/t/p/w500/cDroz5qSlP8xZ6tOpeYoPkBvKyL.jpg",
+ r:"Un reinicio sombrío en el que los poderes llegan desde una dimensión paralela y se viven como una enfermedad.",
+ d:["Su rodaje conflictivo es uno de los casos más comentados de la industria.","Fue el último intento de Fox con el equipo antes de la compra por parte de Disney."],
+ i:"Su fracaso es la razón por la que Marvel esperó una década para llevar a los Cuatro Fantásticos a Doomsday."},
+
+/* ── Marvel antes del UCM ──────────────────────────────────────────────── */
+{n:102,t:"Blade",tp:"pelicula",dur:121,f:0,e:"1998-08-21",m:"Cine",c:"rama",era:"1998 · universo New Line",g:1,ti:36647,tt:"movie",img:"https://image.tmdb.org/t/p/w500/oWT70TvbsmQaqyphCZpsnQR7R32.jpg",
+ r:"Mitad humano y mitad vampiro, Blade caza a los suyos con espada de plata mientras un advenedizo quiere despertar a un dios.",
+ d:["Es la primera película de Marvel que funcionó en taquilla, diez años antes de Iron Man.","Wesley Snipes definió el tono adulto que Deadpool retomaría dos décadas después."],
+ i:"Sin el éxito de Blade no hay X-Men en 2000 ni Spider-Man en 2002: es el punto de partida de todo lo demás."},
+
+{n:103,t:"Blade II",tp:"pelicula",dur:117,f:0,e:"2002-03-22",m:"Cine",c:"rama",era:"2002 · universo New Line",g:1,ti:36586,tt:"movie",img:"https://image.tmdb.org/t/p/w500/yDHwo3eWcMiy5LnnEnlGV9iLu9k.jpg",
+ r:"Blade se alía con un escuadrón de vampiros para frenar a los Segadores, una mutación que se alimenta de ambas especies.",
+ d:["Dirigida por Guillermo del Toro.","Es la mejor recibida de la trilogía."],
+ i:"Consolidó que una película de Marvel podía ser de terror y aun así ser un éxito."},
+
+{n:104,t:"Blade: Trinity",tp:"pelicula",dur:113,f:0,e:"2004-12-08",m:"Cine",c:"rama",era:"2004 · universo New Line",g:1,ti:36648,tt:"movie",img:"https://image.tmdb.org/t/p/w500/6f7iXvPOnf83MaLB1JmPzUor1rr.jpg",
+ r:"Con el FBI encima, Blade se une a los Nightstalkers para enfrentar a Drácula en persona.",
+ d:["Presenta a Ryan Reynolds en su primer papel Marvel, doce años antes de Deadpool.","Cierra la trilogía y la etapa de Marvel en New Line."],
+ i:"Es donde Ryan Reynolds prueba por primera vez el registro que después define a Deadpool."},
+
+{n:105,t:"Hulk",tp:"pelicula",dur:138,f:0,e:"2003-06-20",m:"Cine",c:"rama",era:"2003 · universo Universal",g:1,ti:1927,tt:"movie",img:"https://image.tmdb.org/t/p/w500/UllIft2jLSBaay3zQyMV4GNdfy.jpg",
+ r:"Ang Lee cuenta el origen de Bruce Banner como un drama familiar sobre la herencia y la furia contenida.",
+ d:["Está montada imitando las viñetas de un cómic.","No tiene relación con El Hombre Increíble de 2008, que reinició al personaje."],
+ i:"Es la versión que el UCM decidió descartar: sirve para entender por qué en 2008 volvieron a empezar de cero."},
+
+{n:106,t:"Daredevil (2003)",to:"Daredevil",tp:"pelicula",dur:103,f:0,e:"2003-02-14",m:"Cine",c:"rama",era:"2003 · universo Fox",g:1,ti:9480,tt:"movie",img:"https://image.tmdb.org/t/p/w500/oCDBwSkntYamuw8VJIxMRCtDBmi.jpg",
+ r:"Matt Murdock, ciego desde chico y con los sentidos amplificados, reparte justicia de noche en Hell's Kitchen.",
+ d:["Ben Affleck como Murdock y Colin Farrell como Bullseye.","Su versión extendida está considerablemente mejor valorada que la de cine."],
+ i:"Es el Daredevil que la serie de Netflix vino a corregir, y contra el que se mide el de Charlie Cox."},
+
+{n:107,t:"Elektra",tp:"pelicula",dur:97,f:0,e:"2005-01-14",m:"Cine",c:"rama",era:"2005 · universo Fox",g:1,ti:9947,tt:"movie",img:"https://image.tmdb.org/t/p/w500/gC6s6NKHneSrOKyQZnUMb443RKU.jpg",
+ r:"Resucitada por La Mano, Elektra Natchios trabaja como asesina a sueldo hasta que le toca proteger a quien debía matar.",
+ d:["Derivada de Daredevil (2003), con Jennifer Garner repitiendo el papel.","Garner volvió como Elektra en Deadpool & Wolverine, veinte años después."],
+ i:"Ese regreso en Deadpool & Wolverine convirtió una película olvidada en parte del canon multiversal."},
+
+{n:108,t:"Ghost Rider: El motoquero fantasma",to:"Ghost Rider",tp:"pelicula",dur:114,f:0,e:"2007-02-16",m:"Cine",c:"rama",era:"2007 · universo Sony",g:1,ti:1250,tt:"movie",img:"https://image.tmdb.org/t/p/w500/4quwR1VwZouD0YF9AaD72kQAjxH.jpg",
+ r:"Johnny Blaze le vende el alma al diablo para salvar a su padre y queda convertido en el cobrador de deudas del infierno.",
+ d:["Nicolas Cage con el cráneo en llamas.","El personaje reapareció después en Agents of S.H.I.E.L.D., ya con otro actor y otro Ghost Rider."],
+ i:"Marca el rincón sobrenatural de Marvel que después retoman Moon Knight, Agatha y Werewolf by Night."},
+
+{n:109,t:"Ghost Rider: Espíritu de venganza",to:"Ghost Rider: Spirit of Vengeance",tp:"pelicula",dur:96,f:0,e:"2011-12-14",m:"Cine",c:"rama",era:"2011 · universo Sony",g:2,ti:71676,tt:"movie",img:"https://image.tmdb.org/t/p/w500/xEoBT6lYfQNpSpTm8gJMTrQytiw.jpg",
+ r:"Escondido en Europa del Este, Blaze acepta proteger a un chico que el diablo necesita para encarnarse.",
+ d:["Se estrenó el mismo año que el primer Capitán América, con el UCM ya en marcha.","Es la última película de Marvel con Nicolas Cage."],
+ i:"Cierra la etapa de licencias sueltas: de ahí en más, casi todo pasa por Marvel Studios."},
+
+{n:110,t:"The Punisher (2004)",to:"The Punisher",tp:"pelicula",dur:124,f:0,e:"2004-04-16",m:"Cine",c:"rama",era:"2004 · universo Lionsgate",g:1,ti:7220,tt:"movie",img:"https://image.tmdb.org/t/p/w500/7rmA1HwYp2GKM85BL0cVwCaosGr.jpg",
+ r:"Un agente del FBI pierde a toda su familia por una venganza mafiosa y dedica el resto de su vida a devolverla.",
+ d:["Thomas Jane como Frank Castle.","Jane volvió al personaje en un cortometraje no oficial que se hizo célebre entre fans."],
+ i:"Es el Punisher previo al de Netflix, útil para ver cuánto cambió el tratamiento del personaje."},
+
+{n:111,t:"Punisher: Zona de guerra",to:"Punisher: War Zone",tp:"pelicula",dur:102,f:0,e:"2008-12-05",m:"Cine",c:"rama",era:"2008 · universo Lionsgate",g:1,ti:13056,tt:"movie",img:"https://image.tmdb.org/t/p/w500/oOvKJgYUIpfswGHAdW6159bPbvM.jpg",
+ r:"Frank Castle enfrenta a Jigsaw, un mafioso al que él mismo desfiguró, en la versión más brutal del personaje.",
+ d:["Tercer actor distinto para Frank Castle en cinco años.","Se estrenó el mismo año que Iron Man, con resultados opuestos."],
+ i:"Su fracaso frente al éxito de Iron Man muestra el momento exacto en que Marvel Studios cambió las reglas."},
+
+{n:112,t:"Howard el pato",to:"Howard the Duck",tp:"pelicula",dur:110,f:0,e:"1986-08-01",m:"Cine",c:"rama",era:"1986 · Tierra-58470",g:1,ti:10658,tt:"movie",img:"https://image.tmdb.org/t/p/w500/eU0dWo8PJgsSAZFbcyHiUpuLSyW.jpg",
+ r:"Un pato parlante de otro planeta cae en Cleveland y tiene que frenar a un demonio que llegó por el mismo accidente.",
+ d:["Producida por George Lucas, es la primera película basada en un cómic de Marvel.","Howard aparece en las post-créditos de Guardianes de la Galaxia y en Endgame."],
+ i:"Es la primera adaptación de Marvel al cine y, contra todo pronóstico, su protagonista sigue apareciendo en el UCM."},
+
+/* ── Marvel Television ─────────────────────────────────────────────────── */
+{n:113,t:"Agents of S.H.I.E.L.D.",tp:"serie",ep:147,dur:6615,f:0,e:"2013-09-24",m:"Disney+",c:"principal",era:"2013 – 2020",g:3,ti:1403,tt:"tv",img:"https://image.tmdb.org/t/p/w500/gHUCCMy1vvj58tzE3dZqeC9SXus.jpg",
+ r:"El agente Coulson arma un equipo propio y sostiene S.H.I.E.L.D. después de que HYDRA la vaciara desde adentro.",
+ d:["Siete temporadas y 147 episodios: es lo más extenso que produjo Marvel en televisión.","Su segunda temporada reacciona en tiempo real a la caída de S.H.I.E.L.D. en El Soldado del Invierno."],
+ i:"Desarrolla durante años las consecuencias de El Soldado del Invierno, el vacío institucional que después llenan Val y los Thunderbolts."},
+
+{n:114,t:"Agent Carter",tp:"serie",ep:20,dur:860,f:0,e:"2015-01-06",m:"Disney+",c:"principal",era:"1946 – 1947",g:1,ti:61550,tt:"tv",img:"https://image.tmdb.org/t/p/w500/fe79VYyLp5ZBstpJ4oukpuUT3B.jpg",
+ r:"Terminada la guerra y dado Steve por muerto, Peggy Carter pelea por su lugar en una agencia que la quiere haciendo café.",
+ d:["Muestra la fundación de S.H.I.E.L.D. junto a Howard Stark.","Hayley Atwell retoma el papel que venía del primer Capitán América."],
+ i:"Cuenta de dónde sale S.H.I.E.L.D. y cierra el duelo de Peggy, el vínculo al que Steve vuelve al final de Endgame."},
+
+{n:115,t:"Inhumans",tp:"serie",ep:8,dur:336,f:0,e:"2017-09-29",m:"Disney+",c:"principal",era:"2017 · Attilan",g:3,ti:68716,tt:"tv",img:"https://image.tmdb.org/t/p/w500/zKfGip55oJ9tdzhyd9ayGyFFhuo.jpg",
+ r:"La familia real de los Inhumanos es derrocada por Rayo Negro y termina exiliada en Hawái.",
+ d:["Su primer episodio se estrenó en salas IMAX antes de ir a televisión.","Anson Mount volvió como Rayo Negro en Doctor Strange en el Multiverso de la Locura."],
+ i:"Ese regreso en Multiverso de la Locura, como miembro de los Illuminati, es lo que la vuelve relevante para el mapa."},
+
+{n:116,t:"Runaways",tp:"serie",ep:33,dur:1782,f:0,e:"2017-11-21",m:"Disney+",c:"principal",era:"2017 – 2019",g:3,ti:67466,tt:"tv",img:"https://image.tmdb.org/t/p/w500/hnHEhbzh0F7kN3Ah1lzRjtQuW16.jpg",
+ r:"Seis adolescentes descubren que sus padres integran una secta criminal y se escapan juntos.",
+ d:["Tres temporadas en Hulu, con cruce final con Cloak & Dagger.","Es de lo mejor valorado de la etapa Marvel Television."],
+ i:"Es la generación joven de Marvel en TV, la misma idea que después retoman Ms. Marvel e Ironheart."},
+
+{n:117,t:"Cloak & Dagger",tp:"serie",ep:20,dur:980,f:0,e:"2018-06-07",m:"Disney+",c:"principal",era:"2018 – 2019 · Nueva Orleans",g:4,ti:66190,tt:"tv",img:"https://image.tmdb.org/t/p/w500/pYnRJuBPEqZO1o4fcxBTgmKNHfy.jpg",
+ r:"Dos adolescentes de Nueva Orleans, uno con poder sobre la oscuridad y otra sobre la luz, quedan atados por la misma tragedia.",
+ d:["Sus protagonistas cruzan a Runaways en la tercera temporada de esa serie.","Trata temas sociales con más crudeza que el resto del catálogo."],
+ i:"Lleva lo sobrenatural de Marvel fuera de Nueva York, la descentralización que después continúan Echo e Ironheart."},
+
+{n:118,t:"Helstrom",tp:"serie",ep:10,dur:500,f:0,e:"2020-10-16",m:"Disney+",c:"principal",era:"2020",g:4,ti:88987,tt:"tv",img:"https://image.tmdb.org/t/p/w500/5QmcKsepYpO9XYsWNLwsiULoaAu.jpg",
+ r:"Dos hermanos hijos de un asesino serial cazan lo peor de la humanidad mientras cargan con lo que heredaron.",
+ d:["Es la última serie de Marvel Television antes de que Marvel Studios absorbiera la división.","Terror puro, sin conexión explícita con el resto."],
+ i:"Marca el final de la etapa en que Marvel producía televisión por fuera del estudio de Feige."},
+
+{n:119,t:"M.O.D.O.K.",tp:"serie",ep:10,dur:250,f:0,e:"2021-05-21",m:"Disney+",c:"rama",era:"2021 · universo animado propio",g:4,ti:111312,tt:"tv",img:"https://image.tmdb.org/t/p/w500/2kXRzRjQZs9kAIm3K9MkQgsZR9C.jpg",
+ r:"Un supervillano con cabeza gigante pierde su empresa y su familia al mismo tiempo, en clave de comedia con animación cuadro a cuadro.",
+ d:["Animada en stop-motion por los creadores de Robot Chicken.","Patton Oswalt hace la voz del protagonista."],
+ i:"Es la vertiente cómica y adulta de Marvel, la misma que después habilita el tono de Deadpool & Wolverine."},
+
+{n:120,t:"Hit-Monkey",tp:"serie",ep:20,dur:620,f:0,e:"2021-11-17",m:"Disney+",c:"rama",era:"2021 · Tokio",g:4,ti:133903,tt:"tv",img:"https://image.tmdb.org/t/p/w500/y3ee57YPBhP8RHadX920UjURAWu.jpg",
+ r:"Un macaco japonés aprende a matar guiado por el fantasma de un sicario estadounidense.",
+ d:["Dos temporadas de animación para adultos.","Basada en un personaje menor de los cómics que casi nadie conocía."],
+ i:"Junto a M.O.D.O.K., completa la rama animada adulta que Marvel probó en paralelo al canon principal."}
 ];
 
 const TRAMOS = {
@@ -1192,7 +1400,15 @@ const TRAMOS = {
   7:"Camino a Doomsday · 2027 en adelante"
 };
 
-let orden="crono", tipo="todo", canon="todo", fase="todo", q="", vista="mosaico", soloClave=false, spoiler=true;
+let orden="crono", q="", vista="mosaico", soloClave=false, spoiler=true;
+
+/* Los filtros son conjuntos: vacío = sin restricción, y se pueden apilar
+   varias opciones del mismo grupo. Con 120 títulos, poder pedir
+   "películas + especiales, de la fase 4 y la 5, que me falten" es la
+   diferencia entre una guía usable y una lista interminable. */
+const F = { tipo: new Set(), canon: new Set(), fase: new Set(), estado: new Set() };
+const pasa = (grupo, valor) => !F[grupo].size || F[grupo].has(valor);
+const hayFiltros = () => Object.values(F).some(s => s.size) || q.trim() !== "";
 const vistos=new Set(), destapadas=new Set(), POSTERS=new Map(), PROVEEDORES=new Map();
 const $=s=>document.querySelector(s);
 
@@ -1219,8 +1435,8 @@ const EXPORTADO = true;
 const MODO = "liviano";        // "editor" | "liviano" | "offline"
 let clave = "";
 const TMDB_AUTO = false;
-let PRECARGA   = []; PRECARGA = [[1,"https://image.tmdb.org/t/p/w500/rp3oUwY6K9mwz9VPFIDZzGyP66h.jpg"],[2,"https://image.tmdb.org/t/p/w500/82ucHZ4ioVGiweT1XMl1mUZaodq.jpg"],[3,"https://image.tmdb.org/t/p/w500/5SPa7dZ85p54xa7E9tHRmfKq5ce.jpg"],[6,"https://image.tmdb.org/t/p/w500/tFCTNx7foAsUQpgu2x1KjAJD1wT.jpg"],[4,"https://image.tmdb.org/t/p/w500/9Ycz7yYRf9V4jk3YXwcZhFtbNcF.jpg"],[5,"https://image.tmdb.org/t/p/w500/2HKBc5UiFw8JrruHq8S1Y7TnlW0.jpg"],[7,"https://image.tmdb.org/t/p/w500/ayyJVOV5I4MGjti7nIHC3mVCagR.jpg"],[8,"https://image.tmdb.org/t/p/w500/p4NYZXVtgKf6aiH65QzzkUVJcsd.jpg"],[9,"https://image.tmdb.org/t/p/w500/qFAVW4XJaxhj7PcpiUI5hhO9bOX.jpg"],[10,"https://image.tmdb.org/t/p/w500/cWNIua1iPA4kGyQxJGvnx7UIzoT.jpg"],[11,"https://image.tmdb.org/t/p/w500/cW0fOIZONkgeiMJDYzqUcgl4MUn.jpg"],[12,"https://image.tmdb.org/t/p/w500/cs5YLwGBCJBold74avD3NecO5Zc.jpg"],[13,"https://image.tmdb.org/t/p/w500/3Zv12uAqBxj4xAdeHeVySEQzY1o.jpg"],[14,"https://image.tmdb.org/t/p/w500/zqZNnuMtrmK99Xux91KiCdnZxgb.jpg"],[15,"https://image.tmdb.org/t/p/w500/kdg6Y06jfq9FV7qknWNcKLYtBJn.jpg"],[16,"https://image.tmdb.org/t/p/w500/fXi6HGIJXi7Z8YWZRcRI56dfY4p.jpg"],[17,"https://image.tmdb.org/t/p/w500/tMJ0FBFrYZjo6BNHiYbgqiy8Tf5.jpg"],[18,"https://image.tmdb.org/t/p/w500/jPPy7tCfglppQo6J9nGwU6UmJ8X.jpg"],[19,"https://image.tmdb.org/t/p/w500/rjnciyF6Rj2fwZ7mtrj88RB0z8u.jpg"],[20,"https://image.tmdb.org/t/p/w500/lAPzezdc5E6DFnttJwCWXZ9A9C6.jpg"],[21,"https://image.tmdb.org/t/p/w500/h1Iq6WfE4RWc9klGvN8sdi5aR6V.jpg"],[24,"https://image.tmdb.org/t/p/w500/sOsvKTJS0XwtfLsNMO3C0CVWJ4u.jpg"],[22,"https://image.tmdb.org/t/p/w500/zn5dr2OPz9WAxlAXWRaeDm2L4Zi.jpg"],[23,"https://image.tmdb.org/t/p/w500/aSe4aB8tiPQMoQt9B4SKFgIymwL.jpg"],[25,"https://image.tmdb.org/t/p/w500/rGaayCxGkHZLUyDDB3QQnDg2MHQ.jpg"],[26,"https://image.tmdb.org/t/p/w500/bvYI6i9lQ3bsup9PgnMF3YYr8ZR.jpg"],[27,"https://image.tmdb.org/t/p/w500/ksBQ4oHQDdJwND8H90ay8CbMihU.jpg"],[28,"https://image.tmdb.org/t/p/w500/i4YcoMGEZECeoF3uaZ7tlxrvoxo.jpg"],[29,"https://image.tmdb.org/t/p/w500/xKGQ3FLoXObqQ46RgdxMVJvExjO.jpg"],[30,"https://image.tmdb.org/t/p/w500/mTUd7Hl85FTq7Y7J0pGVIxNx9xr.jpg"],[33,"https://image.tmdb.org/t/p/w500/5UbrwzZUR5lcoDds2phuahFHHhi.jpg"],[34,"https://image.tmdb.org/t/p/w500/cYEPx04WxSSbBA2kdUT6XluYgIw.jpg"],[35,"https://image.tmdb.org/t/p/w500/kW3vNNeeIDkZ2xoRyWmNkeOK6f1.jpg"],[36,"https://image.tmdb.org/t/p/w500/2ctCl1XhcC6r3MP7A3oFSe6iTCD.jpg"],[31,"https://image.tmdb.org/t/p/w500/jI7Yddy1ii1xtCnVwinOhJEGD91.jpg"],[32,"https://image.tmdb.org/t/p/w500/jU5papp3tRvk8tHVugMHQC6uVyX.jpg"],[37,"https://image.tmdb.org/t/p/w500/wPZ5n5LlzFFdO5lFJbi2qmaE6w7.jpg"],[38,"https://image.tmdb.org/t/p/w500/o59zDVJDIehGcWZsMUGU5SN0V0D.jpg"],[40,"https://image.tmdb.org/t/p/w500/9OGkKMnYgSc0TzSIErcOOiKllrK.jpg"],[42,"https://image.tmdb.org/t/p/w500/3KzoEdclGwXQH2t2oYZZlw46TvW.jpg"],[39,"https://image.tmdb.org/t/p/w500/3ZcJetFxd8fwJ1I5xsLHCMTAKQo.jpg"],[41,"https://image.tmdb.org/t/p/w500/1RFLMSnFng8G23zZ1G5Q6lFVRfY.jpg"],[43,"https://image.tmdb.org/t/p/w500/5AHnvXfW0mtsm047OP54n4pnV0R.jpg"],[44,"https://image.tmdb.org/t/p/w500/jMCHAK6IDMBtsFn4yds1jJxw3OO.jpg"],[45,"https://image.tmdb.org/t/p/w500/6aY3OzCIdxoBMYdiH5s17rWFFFA.jpg"],[46,"https://image.tmdb.org/t/p/w500/1w3MlLZPqr2Pm5loQ9h2gJwenMr.jpg"],[47,"https://image.tmdb.org/t/p/w500/4gHWDa9hngo4RJy4BImChkMHooi.jpg"],[48,"https://image.tmdb.org/t/p/w500/5mtz4aRCixqKFDpUOo975frQjbn.jpg"],[49,"https://image.tmdb.org/t/p/w500/iQ4ydo7nSxIlFyq8sZcu0rCK6AN.jpg"],[50,"https://image.tmdb.org/t/p/w500/9D6hFa4TGdqCVE7x9Zec9VdaF2X.jpg"],[51,"https://image.tmdb.org/t/p/w500/lKHy0ntGPdQeFwvNq8gK1D0anEr.jpg"],[52,"https://image.tmdb.org/t/p/w500/jXLhr96JH5DG6TBM8rx8subMpnE.jpg"],[53,"https://image.tmdb.org/t/p/w500/6GkKzdNosVAL7UGgwTtCHSxLQ67.jpg"],[54,"https://image.tmdb.org/t/p/w500/ksz8uiWczvz1TX28YOYE9WnS9RR.jpg"],[55,"https://image.tmdb.org/t/p/w500/vpuuFM032yiX8tox4L84Wl9MGjG.jpg"],[56,"https://image.tmdb.org/t/p/w500/ZRGpvhhKK59BIiPrxIqME7FmL.jpg"],[59,"https://image.tmdb.org/t/p/w500/vUNj55xlF0pSU5FU3yDHC6L5wVX.jpg"],[60,"https://image.tmdb.org/t/p/w500/yDWU8YyFkPnlVY627QXPvct8bz9.jpg"],[57,"https://image.tmdb.org/t/p/w500/dOh6MJpdlQhYpLBhzhNQeYGKTZ5.jpg"],[58,"https://image.tmdb.org/t/p/w500/gbNoR5RnVlcZd4OBK3Q5aZfXjKG.jpg"],[61,"https://image.tmdb.org/t/p/w500/6yy9nQlFt2l6UVWzrfhszFCaZ5C.jpg"],[63,"https://image.tmdb.org/t/p/w500/ehzOlaPVTyHnGNhcvfzgXPFNY31.jpg"],[64,"https://image.tmdb.org/t/p/w500/6j60tGRAjBmWRPTOEwhW6oRbPMP.jpg"],[65,"https://image.tmdb.org/t/p/w500/lESwYExnRVCDscOmdvklWxZgWUp.jpg"],[66,"https://image.tmdb.org/t/p/w500/fBFjaDWfNslvrs6bJjknmG27wOS.jpg"],[62,"https://image.tmdb.org/t/p/w500/1jcGofudw0M2B9lqNy3GyeOf5uh.jpg"],[72,"https://image.tmdb.org/t/p/w500/3TUYy0XvhPQBhrXJwRIaOoYFOBO.jpg"],[67,"https://image.tmdb.org/t/p/w500/or6XJBVpcEbIkma0V9zshnbEtx4.jpg"],[68,"https://image.tmdb.org/t/p/w500/9vAx9vN27TpRv98fREN4aXIdhbp.jpg"],[71,"https://image.tmdb.org/t/p/w500/z07KnqwHWDY3q5utu0xBLKo3UWo.jpg"],[70,"https://image.tmdb.org/t/p/w500/9MsCANWyLJmz2MAEqiy9vKMpyc8.jpg"],[69,"https://image.tmdb.org/t/p/w500/yqQRaD0uBWKLvSVe6LuMveb0ZLv.jpg"],[74,"https://image.tmdb.org/t/p/w500/84NUrv5kuMUDDlOPqi97KGJMdLm.jpg"],[73,"https://image.tmdb.org/t/p/w500/d0ktjN9eKww26HhM8or8iUB1I68.jpg"],[75,"https://image.tmdb.org/t/p/w500/jMBTJQiHAyGlZR05J2sq5coA6ew.jpg"],[76,"https://image.tmdb.org/t/p/w500/aF170xLGytZcC0xeSlSamImgIi4.jpg"],[77,"https://image.tmdb.org/t/p/w500/bnZUa8bCq2uz56Jv6Clpcjtvw0V.jpg"],[78,"https://image.tmdb.org/t/p/w500/6FnWDI3mKZhfWv7NznKUFlvSdo0.jpg"],[80,"https://image.tmdb.org/t/p/w500/6ED3G0lpBXRZtEDJD2xVYsqIwxI.jpg"],[82,"https://image.tmdb.org/t/p/w500/ggb9nmS5alJuA0ll0iU5YHiGbb0.jpg"],[81,"https://image.tmdb.org/t/p/w500/hrvn8OfsdClEs2sbQ6aTCnpEnPU.jpg"],[83,"https://image.tmdb.org/t/p/w500/i5ET4lACwrb97sdPzmIThieasOk.jpg"],[79,"https://image.tmdb.org/t/p/w500/lQAiASSFzY5SMud5f0Gu0C0jLlJ.jpg"],[84,"https://image.tmdb.org/t/p/w500/rdByKDkfyVuVSrkllzxKYXiZmTd.jpg"],[88,"https://image.tmdb.org/t/p/w500/zdjmPOMNlDpmqXLgNaGBT7jAiFj.jpg"],[87,"https://image.tmdb.org/t/p/w500/toZiAd0n0NKhiuHTiGk7kBMmhtG.jpg"],[86,"https://image.tmdb.org/t/p/w500/kviQ0gYXjBug7JEYteV8IbZzE3l.jpg"],[89,"https://image.tmdb.org/t/p/w500/b3EVT7sSX8Y8L3OekYWyKLRS1Jt.jpg"],[90,"https://image.tmdb.org/t/p/w500/yzM1hMB3PUJqbISX0f421b3xOjB.jpg"],[85,"https://image.tmdb.org/t/p/w500/cNEIc6SbgsNWkzwfw4EuYLqE9Gt.jpg"],[93,"https://image.tmdb.org/t/p/w500/8OdIbo68mFE4w6jXA20aL8ocPsE.jpg"],[91,"https://image.tmdb.org/t/p/w500/ywrvjIgK5K9Ff8RddgdFI3kfDqT.jpg"],[92,"https://image.tmdb.org/t/p/w500/49XzINhH4LFsgz7cx6TOPcHUJUL.jpg"]];
-let PRE_PROV   = []; PRE_PROV = [[2,{"link":"https://www.themoviedb.org/movie/1771-captain-america-the-first-avenger/watch?locale=AR","srv":["Disney Plus"]}],[3,{"link":"https://www.themoviedb.org/movie/299537-captain-marvel/watch?locale=AR","srv":["Disney Plus"]}],[1,{"link":"https://www.themoviedb.org/tv/241388-eyes-of-wakanda/watch?locale=AR","srv":["Disney Plus"]}],[4,{"link":"https://www.themoviedb.org/tv/138502-x-men-97/watch?locale=AR","srv":["Disney Plus"]}],[6,{"link":"https://www.themoviedb.org/movie/1726-iron-man/watch?locale=AR","srv":["Disney Plus"]}],[5,{"link":"https://www.themoviedb.org/tv/138502-x-men-97/watch?locale=AR","srv":["Disney Plus"]}],[11,{"link":"https://www.themoviedb.org/movie/68721-iron-man-3/watch?locale=AR","srv":["Disney Plus"]}],[9,{"link":"https://www.themoviedb.org/movie/10195-thor/watch?locale=AR","srv":["Disney Plus"]}],[10,{"link":"https://www.themoviedb.org/movie/24428-the-avengers/watch?locale=AR","srv":["Disney Plus"]}],[7,{"link":"https://www.themoviedb.org/movie/10138-iron-man-2/watch?locale=AR","srv":["Disney Plus"]}],[8,{"link":"https://www.themoviedb.org/movie/1724-the-incredible-hulk/watch?locale=AR","srv":[]}],[12,{"link":"https://www.themoviedb.org/movie/76338-thor-the-dark-world/watch?locale=AR","srv":["Disney Plus"]}],[14,{"link":"https://www.themoviedb.org/movie/118340-guardians-of-the-galaxy/watch?locale=AR","srv":["Disney Plus"]}],[17,{"link":"https://www.themoviedb.org/movie/102899-ant-man/watch?locale=AR","srv":["Disney Plus"]}],[18,{"link":"https://www.themoviedb.org/movie/271110-captain-america-civil-war/watch?locale=AR","srv":["Disney Plus"]}],[16,{"link":"https://www.themoviedb.org/movie/99861-avengers-age-of-ultron/watch?locale=AR","srv":["Disney Plus"]}],[15,{"link":"https://www.themoviedb.org/movie/283995-guardians-of-the-galaxy-vol-2/watch?locale=AR","srv":["Disney Plus"]}],[13,{"link":"https://www.themoviedb.org/movie/100402-captain-america-the-winter-soldier/watch?locale=AR","srv":["Disney Plus"]}],[24,{"link":"https://www.themoviedb.org/movie/284052-doctor-strange/watch?locale=AR","srv":["Disney Plus"]}],[19,{"link":"https://www.themoviedb.org/movie/497698-black-widow/watch?locale=AR","srv":["Disney Plus"]}],[20,{"link":"https://www.themoviedb.org/movie/284054-black-panther/watch?locale=AR","srv":["Disney Plus"]}],[21,{"link":"https://www.themoviedb.org/movie/315635-spider-man-homecoming/watch?locale=AR","srv":["HBO Max"]}],[25,{"link":"https://www.themoviedb.org/movie/284053-thor-ragnarok/watch?locale=AR","srv":["Disney Plus"]}],[28,{"link":"https://www.themoviedb.org/movie/299534-avengers-endgame/watch?locale=AR","srv":["Disney Plus"]}],[27,{"link":"https://www.themoviedb.org/movie/299536-avengers-infinity-war/watch?locale=AR","srv":["Disney Plus"]}],[26,{"link":"https://www.themoviedb.org/movie/363088-ant-man-and-the-wasp/watch?locale=AR","srv":["Disney Plus"]}],[29,{"link":"https://www.themoviedb.org/tv/84958-loki/watch?locale=AR","srv":["Disney Plus"]}],[30,{"link":"https://www.themoviedb.org/tv/91363-what-if/watch?locale=AR","srv":["Disney Plus"]}],[31,{"link":"https://www.themoviedb.org/tv/91363-what-if/watch?locale=AR","srv":["Disney Plus"]}],[32,{"link":"https://www.themoviedb.org/tv/91363-what-if/watch?locale=AR","srv":["Disney Plus"]}],[33,{"link":"https://www.themoviedb.org/tv/138505-marvel-zombies/watch?locale=AR","srv":["Disney Plus"]}],[35,{"link":"https://www.themoviedb.org/tv/88396-the-falcon-and-the-winter-soldier/watch?locale=AR","srv":["Disney Plus"]}],[34,{"link":"https://www.themoviedb.org/tv/85271-wandavision/watch?locale=AR","srv":["Disney Plus"]}],[36,{"link":"https://www.themoviedb.org/movie/566525-shang-chi-and-the-legend-of-the-ten-rings/watch?locale=AR","srv":["Disney Plus"]}],[42,{"link":"https://www.themoviedb.org/tv/92782-ms-marvel/watch?locale=AR","srv":["Disney Plus"]}],[37,{"link":"https://www.themoviedb.org/movie/524434-eternals/watch?locale=AR","srv":["Disney Plus"]}],[38,{"link":"https://www.themoviedb.org/movie/429617-spider-man-far-from-home/watch?locale=AR","srv":["Netflix","Amazon Prime Video","VIX ","ViX Premium Amazon Channel","Universal+ Amazon Channel"]}],[40,{"link":"https://www.themoviedb.org/movie/634649-spider-man-no-way-home/watch?locale=AR","srv":["MovistarTV","Universal+ Amazon Channel","Mercado Play"]}],[39,{"link":"https://www.themoviedb.org/tv/88329-hawkeye/watch?locale=AR","srv":["Disney Plus"]}],[41,{"link":"https://www.themoviedb.org/tv/122226-echo/watch?locale=AR","srv":["Disney Plus"]}],[43,{"link":"https://www.themoviedb.org/tv/92749-moon-knight/watch?locale=AR","srv":["Disney Plus"]}],[46,{"link":"https://www.themoviedb.org/movie/453395-doctor-strange-in-the-multiverse-of-madness/watch?locale=AR","srv":["Disney Plus"]}],[44,{"link":"https://www.themoviedb.org/tv/92783-she-hulk-attorney-at-law/watch?locale=AR","srv":["Disney Plus"]}],[45,{"link":"https://www.themoviedb.org/movie/533535-deadpool-wolverine/watch?locale=AR","srv":["Disney Plus"]}],[48,{"link":"https://www.themoviedb.org/movie/894205-werewolf-by-night/watch?locale=AR","srv":["Disney Plus"]}],[47,{"link":"https://www.themoviedb.org/movie/616037-thor-love-and-thunder/watch?locale=AR","srv":["Disney Plus"]}],[49,{"link":"https://www.themoviedb.org/movie/505642-black-panther-wakanda-forever/watch?locale=AR","srv":["Disney Plus"]}],[50,{"link":"https://www.themoviedb.org/movie/774752-the-guardians-of-the-galaxy-holiday-special/watch?locale=AR","srv":["Disney Plus"]}],[52,{"link":"https://www.themoviedb.org/tv/114472-secret-invasion/watch?locale=AR","srv":["Disney Plus"]}],[53,{"link":"https://www.themoviedb.org/movie/447365-guardians-of-the-galaxy-vol-3/watch?locale=AR","srv":["Disney Plus"]}],[51,{"link":"https://www.themoviedb.org/movie/640146-ant-man-and-the-wasp-quantumania/watch?locale=AR","srv":["Disney Plus"]}],[54,{"link":"https://www.themoviedb.org/tv/84958-loki/watch?locale=AR","srv":["Disney Plus"]}],[56,{"link":"https://www.themoviedb.org/tv/138501-agatha-all-along/watch?locale=AR","srv":["Disney Plus"]}],[60,{"link":"https://www.themoviedb.org/movie/986056-thunderbolts/watch?locale=AR","srv":["Disney Plus"]}],[55,{"link":"https://www.themoviedb.org/movie/609681-the-marvels/watch?locale=AR","srv":["Disney Plus"]}],[59,{"link":"https://www.themoviedb.org/movie/822119-captain-america-brave-new-world/watch?locale=AR","srv":["Disney Plus"]}],[57,{"link":"https://www.themoviedb.org/tv/114471-ironheart/watch?locale=AR","srv":["Disney Plus"]}],[58,{"link":"https://www.themoviedb.org/tv/202555-daredevil-born-again/watch?locale=AR","srv":["Disney Plus"]}],[62,{"link":"https://www.themoviedb.org/tv/202555-daredevil-born-again/watch?locale=AR","srv":["Disney Plus"]}],[63,{"link":"https://www.themoviedb.org/movie/1439930-the-punisher-one-last-kill/watch?locale=AR","srv":["Disney Plus"]}],[65,{"link":"https://www.themoviedb.org/movie/617126-the-fantastic-4-first-steps/watch?locale=AR","srv":["Disney Plus"]}],[61,{"link":"https://www.themoviedb.org/tv/198178-wonder-man/watch?locale=AR","srv":["Disney Plus"]}],[72,{"link":"https://www.themoviedb.org/movie/293660-deadpool/watch?locale=AR","srv":["Disney Plus"]}],[67,{"link":"https://www.themoviedb.org/movie/557-spider-man/watch?locale=AR","srv":["Amazon Prime Video","MovistarTV","VIX ","HBO Max","ViX Premium Amazon Channel","Sony One Amazon Channel"]}],[70,{"link":"https://www.themoviedb.org/movie/1930-the-amazing-spider-man/watch?locale=AR","srv":["Amazon Prime Video","MovistarTV","VIX ","HBO Max","ViX Premium Amazon Channel"]}],[69,{"link":"https://www.themoviedb.org/movie/559-spider-man-3/watch?locale=AR","srv":["Amazon Prime Video","MovistarTV","Claro video","VIX ","HBO Max","ViX Premium Amazon Channel","Sony One Amazon Channel"]}],[71,{"link":"https://www.themoviedb.org/movie/102382-the-amazing-spider-man-2/watch?locale=AR","srv":["Amazon Prime Video","MovistarTV","VIX ","HBO Max","ViX Premium Amazon Channel","Sony One Amazon Channel"]}],[68,{"link":"https://www.themoviedb.org/movie/558-spider-man-2/watch?locale=AR","srv":["Amazon Prime Video","MovistarTV","HBO Max","Sony One Amazon Channel"]}],[74,{"link":"https://www.themoviedb.org/movie/383498-deadpool-2/watch?locale=AR","srv":["Disney Plus"]}],[73,{"link":"https://www.themoviedb.org/movie/263115-logan/watch?locale=AR","srv":["Disney Plus"]}],[75,{"link":"https://www.themoviedb.org/movie/335983-venom/watch?locale=AR","srv":["MovistarTV","HBO Max"]}],[76,{"link":"https://www.themoviedb.org/movie/36657-x-men/watch?locale=AR","srv":["Disney Plus"]}],[78,{"link":"https://www.themoviedb.org/movie/36668-x-men-the-last-stand/watch?locale=AR","srv":["Disney Plus"]}],[77,{"link":"https://www.themoviedb.org/movie/36658-x2/watch?locale=AR","srv":["Disney Plus"]}],[80,{"link":"https://www.themoviedb.org/movie/49538-x-men-first-class/watch?locale=AR","srv":["Disney Plus"]}],[82,{"link":"https://www.themoviedb.org/movie/127585-x-men-days-of-future-past/watch?locale=AR","srv":["Disney Plus"]}],[83,{"link":"https://www.themoviedb.org/movie/246655-x-men-apocalypse/watch?locale=AR","srv":["Disney Plus"]}],[84,{"link":"https://www.themoviedb.org/movie/320288-dark-phoenix/watch?locale=AR","srv":["Disney Plus"]}],[81,{"link":"https://www.themoviedb.org/movie/76170-the-wolverine/watch?locale=AR","srv":["Disney Plus"]}],[79,{"link":"https://www.themoviedb.org/movie/2080-x-men-origins-wolverine/watch?locale=AR","srv":["Disney Plus"]}],[88,{"link":"https://www.themoviedb.org/tv/61889-marvel-s-daredevil/watch?locale=AR","srv":["Disney Plus"]}],[87,{"link":"https://www.themoviedb.org/movie/912649-venom-the-last-dance/watch?locale=AR","srv":["Amazon Prime Video"]}],[89,{"link":"https://www.themoviedb.org/tv/38472-marvel-s-jessica-jones/watch?locale=AR","srv":["Disney Plus"]}],[90,{"link":"https://www.themoviedb.org/tv/62126-marvel-s-luke-cage/watch?locale=AR","srv":["Disney Plus"]}],[86,{"link":"https://www.themoviedb.org/movie/580489-venom-let-there-be-carnage/watch?locale=AR","srv":["MovistarTV","Universal+ Amazon Channel"]}],[85,{"link":"https://www.themoviedb.org/movie/340102-the-new-mutants/watch?locale=AR","srv":["Disney Plus"]}],[91,{"link":"https://www.themoviedb.org/tv/62127-marvel-s-iron-fist/watch?locale=AR","srv":["Disney Plus"]}],[92,{"link":"https://www.themoviedb.org/tv/62285-marvel-s-the-defenders/watch?locale=AR","srv":["Disney Plus"]}],[93,{"link":"https://www.themoviedb.org/tv/67178-marvel-s-the-punisher/watch?locale=AR","srv":["Disney Plus"]}]];
+let PRECARGA   = []; PRECARGA = [[1,"https://image.tmdb.org/t/p/w500/rp3oUwY6K9mwz9VPFIDZzGyP66h.jpg"],[2,"https://image.tmdb.org/t/p/w500/82ucHZ4ioVGiweT1XMl1mUZaodq.jpg"],[3,"https://image.tmdb.org/t/p/w500/5SPa7dZ85p54xa7E9tHRmfKq5ce.jpg"],[6,"https://image.tmdb.org/t/p/w500/tFCTNx7foAsUQpgu2x1KjAJD1wT.jpg"],[4,"https://image.tmdb.org/t/p/w500/9Ycz7yYRf9V4jk3YXwcZhFtbNcF.jpg"],[5,"https://image.tmdb.org/t/p/w500/2HKBc5UiFw8JrruHq8S1Y7TnlW0.jpg"],[7,"https://image.tmdb.org/t/p/w500/ayyJVOV5I4MGjti7nIHC3mVCagR.jpg"],[8,"https://image.tmdb.org/t/p/w500/p4NYZXVtgKf6aiH65QzzkUVJcsd.jpg"],[9,"https://image.tmdb.org/t/p/w500/qFAVW4XJaxhj7PcpiUI5hhO9bOX.jpg"],[10,"https://image.tmdb.org/t/p/w500/cWNIua1iPA4kGyQxJGvnx7UIzoT.jpg"],[11,"https://image.tmdb.org/t/p/w500/cW0fOIZONkgeiMJDYzqUcgl4MUn.jpg"],[12,"https://image.tmdb.org/t/p/w500/cs5YLwGBCJBold74avD3NecO5Zc.jpg"],[13,"https://image.tmdb.org/t/p/w500/3Zv12uAqBxj4xAdeHeVySEQzY1o.jpg"],[14,"https://image.tmdb.org/t/p/w500/zqZNnuMtrmK99Xux91KiCdnZxgb.jpg"],[15,"https://image.tmdb.org/t/p/w500/kdg6Y06jfq9FV7qknWNcKLYtBJn.jpg"],[16,"https://image.tmdb.org/t/p/w500/fXi6HGIJXi7Z8YWZRcRI56dfY4p.jpg"],[17,"https://image.tmdb.org/t/p/w500/tMJ0FBFrYZjo6BNHiYbgqiy8Tf5.jpg"],[18,"https://image.tmdb.org/t/p/w500/jPPy7tCfglppQo6J9nGwU6UmJ8X.jpg"],[19,"https://image.tmdb.org/t/p/w500/rjnciyF6Rj2fwZ7mtrj88RB0z8u.jpg"],[20,"https://image.tmdb.org/t/p/w500/lAPzezdc5E6DFnttJwCWXZ9A9C6.jpg"],[21,"https://image.tmdb.org/t/p/w500/h1Iq6WfE4RWc9klGvN8sdi5aR6V.jpg"],[24,"https://image.tmdb.org/t/p/w500/sOsvKTJS0XwtfLsNMO3C0CVWJ4u.jpg"],[22,"https://image.tmdb.org/t/p/w500/zn5dr2OPz9WAxlAXWRaeDm2L4Zi.jpg"],[23,"https://image.tmdb.org/t/p/w500/aSe4aB8tiPQMoQt9B4SKFgIymwL.jpg"],[25,"https://image.tmdb.org/t/p/w500/rGaayCxGkHZLUyDDB3QQnDg2MHQ.jpg"],[26,"https://image.tmdb.org/t/p/w500/bvYI6i9lQ3bsup9PgnMF3YYr8ZR.jpg"],[27,"https://image.tmdb.org/t/p/w500/ksBQ4oHQDdJwND8H90ay8CbMihU.jpg"],[28,"https://image.tmdb.org/t/p/w500/i4YcoMGEZECeoF3uaZ7tlxrvoxo.jpg"],[29,"https://image.tmdb.org/t/p/w500/xKGQ3FLoXObqQ46RgdxMVJvExjO.jpg"],[30,"https://image.tmdb.org/t/p/w500/mTUd7Hl85FTq7Y7J0pGVIxNx9xr.jpg"],[33,"https://image.tmdb.org/t/p/w500/5UbrwzZUR5lcoDds2phuahFHHhi.jpg"],[34,"https://image.tmdb.org/t/p/w500/cYEPx04WxSSbBA2kdUT6XluYgIw.jpg"],[35,"https://image.tmdb.org/t/p/w500/kW3vNNeeIDkZ2xoRyWmNkeOK6f1.jpg"],[36,"https://image.tmdb.org/t/p/w500/2ctCl1XhcC6r3MP7A3oFSe6iTCD.jpg"],[31,"https://image.tmdb.org/t/p/w500/jI7Yddy1ii1xtCnVwinOhJEGD91.jpg"],[32,"https://image.tmdb.org/t/p/w500/jU5papp3tRvk8tHVugMHQC6uVyX.jpg"],[37,"https://image.tmdb.org/t/p/w500/wPZ5n5LlzFFdO5lFJbi2qmaE6w7.jpg"],[38,"https://image.tmdb.org/t/p/w500/o59zDVJDIehGcWZsMUGU5SN0V0D.jpg"],[40,"https://image.tmdb.org/t/p/w500/9OGkKMnYgSc0TzSIErcOOiKllrK.jpg"],[42,"https://image.tmdb.org/t/p/w500/3KzoEdclGwXQH2t2oYZZlw46TvW.jpg"],[39,"https://image.tmdb.org/t/p/w500/3ZcJetFxd8fwJ1I5xsLHCMTAKQo.jpg"],[41,"https://image.tmdb.org/t/p/w500/1RFLMSnFng8G23zZ1G5Q6lFVRfY.jpg"],[43,"https://image.tmdb.org/t/p/w500/5AHnvXfW0mtsm047OP54n4pnV0R.jpg"],[44,"https://image.tmdb.org/t/p/w500/jMCHAK6IDMBtsFn4yds1jJxw3OO.jpg"],[45,"https://image.tmdb.org/t/p/w500/6aY3OzCIdxoBMYdiH5s17rWFFFA.jpg"],[46,"https://image.tmdb.org/t/p/w500/1w3MlLZPqr2Pm5loQ9h2gJwenMr.jpg"],[47,"https://image.tmdb.org/t/p/w500/4gHWDa9hngo4RJy4BImChkMHooi.jpg"],[48,"https://image.tmdb.org/t/p/w500/5mtz4aRCixqKFDpUOo975frQjbn.jpg"],[49,"https://image.tmdb.org/t/p/w500/iQ4ydo7nSxIlFyq8sZcu0rCK6AN.jpg"],[50,"https://image.tmdb.org/t/p/w500/9D6hFa4TGdqCVE7x9Zec9VdaF2X.jpg"],[51,"https://image.tmdb.org/t/p/w500/lKHy0ntGPdQeFwvNq8gK1D0anEr.jpg"],[52,"https://image.tmdb.org/t/p/w500/jXLhr96JH5DG6TBM8rx8subMpnE.jpg"],[53,"https://image.tmdb.org/t/p/w500/6GkKzdNosVAL7UGgwTtCHSxLQ67.jpg"],[54,"https://image.tmdb.org/t/p/w500/ksz8uiWczvz1TX28YOYE9WnS9RR.jpg"],[55,"https://image.tmdb.org/t/p/w500/vpuuFM032yiX8tox4L84Wl9MGjG.jpg"],[56,"https://image.tmdb.org/t/p/w500/ZRGpvhhKK59BIiPrxIqME7FmL.jpg"],[59,"https://image.tmdb.org/t/p/w500/vUNj55xlF0pSU5FU3yDHC6L5wVX.jpg"],[60,"https://image.tmdb.org/t/p/w500/yDWU8YyFkPnlVY627QXPvct8bz9.jpg"],[57,"https://image.tmdb.org/t/p/w500/dOh6MJpdlQhYpLBhzhNQeYGKTZ5.jpg"],[58,"https://image.tmdb.org/t/p/w500/gbNoR5RnVlcZd4OBK3Q5aZfXjKG.jpg"],[61,"https://image.tmdb.org/t/p/w500/6yy9nQlFt2l6UVWzrfhszFCaZ5C.jpg"],[63,"https://image.tmdb.org/t/p/w500/ehzOlaPVTyHnGNhcvfzgXPFNY31.jpg"],[64,"https://image.tmdb.org/t/p/w500/6j60tGRAjBmWRPTOEwhW6oRbPMP.jpg"],[65,"https://image.tmdb.org/t/p/w500/lESwYExnRVCDscOmdvklWxZgWUp.jpg"],[66,"https://image.tmdb.org/t/p/w500/rG5OhgBvF0zRI7lw5lhOUYi196K.jpg"],[62,"https://image.tmdb.org/t/p/w500/1jcGofudw0M2B9lqNy3GyeOf5uh.jpg"],[72,"https://image.tmdb.org/t/p/w500/3TUYy0XvhPQBhrXJwRIaOoYFOBO.jpg"],[67,"https://image.tmdb.org/t/p/w500/or6XJBVpcEbIkma0V9zshnbEtx4.jpg"],[68,"https://image.tmdb.org/t/p/w500/9vAx9vN27TpRv98fREN4aXIdhbp.jpg"],[71,"https://image.tmdb.org/t/p/w500/z07KnqwHWDY3q5utu0xBLKo3UWo.jpg"],[70,"https://image.tmdb.org/t/p/w500/9MsCANWyLJmz2MAEqiy9vKMpyc8.jpg"],[69,"https://image.tmdb.org/t/p/w500/yqQRaD0uBWKLvSVe6LuMveb0ZLv.jpg"],[74,"https://image.tmdb.org/t/p/w500/84NUrv5kuMUDDlOPqi97KGJMdLm.jpg"],[73,"https://image.tmdb.org/t/p/w500/d0ktjN9eKww26HhM8or8iUB1I68.jpg"],[75,"https://image.tmdb.org/t/p/w500/jMBTJQiHAyGlZR05J2sq5coA6ew.jpg"],[76,"https://image.tmdb.org/t/p/w500/aF170xLGytZcC0xeSlSamImgIi4.jpg"],[77,"https://image.tmdb.org/t/p/w500/bnZUa8bCq2uz56Jv6Clpcjtvw0V.jpg"],[78,"https://image.tmdb.org/t/p/w500/6FnWDI3mKZhfWv7NznKUFlvSdo0.jpg"],[80,"https://image.tmdb.org/t/p/w500/6ED3G0lpBXRZtEDJD2xVYsqIwxI.jpg"],[82,"https://image.tmdb.org/t/p/w500/ggb9nmS5alJuA0ll0iU5YHiGbb0.jpg"],[81,"https://image.tmdb.org/t/p/w500/hrvn8OfsdClEs2sbQ6aTCnpEnPU.jpg"],[83,"https://image.tmdb.org/t/p/w500/i5ET4lACwrb97sdPzmIThieasOk.jpg"],[79,"https://image.tmdb.org/t/p/w500/lQAiASSFzY5SMud5f0Gu0C0jLlJ.jpg"],[84,"https://image.tmdb.org/t/p/w500/rdByKDkfyVuVSrkllzxKYXiZmTd.jpg"],[88,"https://image.tmdb.org/t/p/w500/zdjmPOMNlDpmqXLgNaGBT7jAiFj.jpg"],[87,"https://image.tmdb.org/t/p/w500/toZiAd0n0NKhiuHTiGk7kBMmhtG.jpg"],[86,"https://image.tmdb.org/t/p/w500/kviQ0gYXjBug7JEYteV8IbZzE3l.jpg"],[89,"https://image.tmdb.org/t/p/w500/b3EVT7sSX8Y8L3OekYWyKLRS1Jt.jpg"],[90,"https://image.tmdb.org/t/p/w500/yzM1hMB3PUJqbISX0f421b3xOjB.jpg"],[85,"https://image.tmdb.org/t/p/w500/cNEIc6SbgsNWkzwfw4EuYLqE9Gt.jpg"],[93,"https://image.tmdb.org/t/p/w500/8OdIbo68mFE4w6jXA20aL8ocPsE.jpg"],[91,"https://image.tmdb.org/t/p/w500/ywrvjIgK5K9Ff8RddgdFI3kfDqT.jpg"],[92,"https://image.tmdb.org/t/p/w500/49XzINhH4LFsgz7cx6TOPcHUJUL.jpg"],[94,"https://image.tmdb.org/t/p/w500/e47p9fHR6jMrrLeoa7l5hU05vhR.jpg"],[95,"https://image.tmdb.org/t/p/w500/rXhgHQmtjTIQOEDU8E2TbUFMjWM.jpg"],[96,"https://image.tmdb.org/t/p/w500/4jcJHqIVsb4MFdYrDajXeEVlDvH.jpg"],[100,"https://image.tmdb.org/t/p/w500/pRXgCDTRKEIUy5cySYA4zC5to5B.jpg"],[102,"https://image.tmdb.org/t/p/w500/IZt3ouxQIVRfig4N2FKTa9OIWF.jpg"],[98,"https://image.tmdb.org/t/p/w500/gabWTSVhzltlKkmcqPoJmjKJxyb.jpg"],[101,"https://image.tmdb.org/t/p/w500/auXAR5jfSNOWWtuEYFWcNadfzWX.jpg"],[97,"https://image.tmdb.org/t/p/w500/blq050GHBt0Fzx1j9FvohaEuknJ.jpg"],[99,"https://image.tmdb.org/t/p/w500/l3Yk65bVdgiMOMeK6O8aZxEBt5J.jpg"],[103,"https://image.tmdb.org/t/p/w500/h6zm5DOu6Fm146nU0iqYkhkG6DO.jpg"],[104,"https://image.tmdb.org/t/p/w500/8GiUVbr73cHe68d4ybpxDbeReZP.jpg"],[105,"https://image.tmdb.org/t/p/w500/iXZq1LvlsmR9PMryzcGmOt9vuZe.jpg"],[106,"https://image.tmdb.org/t/p/w500/x1l1vC446IM89iD3wBaQc3erp9Z.jpg"],[107,"https://image.tmdb.org/t/p/w500/o7zyXvZOOc3ECTCjtPKGNxPsZQ1.jpg"],[108,"https://image.tmdb.org/t/p/w500/zpIL93pCQJz7gT17EnSHOkcMBOF.jpg"],[109,"https://image.tmdb.org/t/p/w500/nMPCSYPyeBbfwHUCvyAJUEUiLBU.jpg"],[110,"https://image.tmdb.org/t/p/w500/bXEjRdWopGO4RhUlX0wdxMTT0Os.jpg"],[111,"https://image.tmdb.org/t/p/w500/8X2r09vhgGc4dk0Es3jr2gFSD8o.jpg"],[114,"https://image.tmdb.org/t/p/w500/scZsg0rfAyH8ADphzrdhgo5jAXd.jpg"],[112,"https://image.tmdb.org/t/p/w500/sRidv4QitkAKDzgwOdRrVDJuWNG.jpg"],[113,"https://image.tmdb.org/t/p/w500/dW0qrzdW0XaxuK8hCVXLOh9H0Hl.jpg"],[117,"https://image.tmdb.org/t/p/w500/7tkdu8D2hPxr8hF2GUFn5b6migE.jpg"],[120,"https://image.tmdb.org/t/p/w500/y3ee57YPBhP8RHadX920UjURAWu.jpg"],[115,"https://image.tmdb.org/t/p/w500/zKfGip55oJ9tdzhyd9ayGyFFhuo.jpg"],[118,"https://image.tmdb.org/t/p/w500/5QmcKsepYpO9XYsWNLwsiULoaAu.jpg"],[119,"https://image.tmdb.org/t/p/w500/6fnMW8CmXaf1OpXqNvGRBUGAeh5.jpg"],[116,"https://image.tmdb.org/t/p/w500/hnHEhbzh0F7kN3Ah1lzRjtQuW16.jpg"]];
+let PRE_PROV   = []; PRE_PROV = [[2,{"link":"https://www.themoviedb.org/movie/1771-captain-america-the-first-avenger/watch?locale=AR","srv":["Disney Plus"]}],[3,{"link":"https://www.themoviedb.org/movie/299537-captain-marvel/watch?locale=AR","srv":["Disney Plus"]}],[1,{"link":"https://www.themoviedb.org/tv/241388-eyes-of-wakanda/watch?locale=AR","srv":["Disney Plus"]}],[4,{"link":"https://www.themoviedb.org/tv/138502-x-men-97/watch?locale=AR","srv":["Disney Plus"]}],[6,{"link":"https://www.themoviedb.org/movie/1726-iron-man/watch?locale=AR","srv":["Disney Plus"]}],[5,{"link":"https://www.themoviedb.org/tv/138502-x-men-97/watch?locale=AR","srv":["Disney Plus"]}],[11,{"link":"https://www.themoviedb.org/movie/68721-iron-man-3/watch?locale=AR","srv":["Disney Plus"]}],[9,{"link":"https://www.themoviedb.org/movie/10195-thor/watch?locale=AR","srv":["Disney Plus"]}],[10,{"link":"https://www.themoviedb.org/movie/24428-the-avengers/watch?locale=AR","srv":["Disney Plus"]}],[7,{"link":"https://www.themoviedb.org/movie/10138-iron-man-2/watch?locale=AR","srv":["Disney Plus"]}],[8,{"link":"https://www.themoviedb.org/movie/1724-the-incredible-hulk/watch?locale=AR","srv":[]}],[12,{"link":"https://www.themoviedb.org/movie/76338-thor-the-dark-world/watch?locale=AR","srv":["Disney Plus"]}],[14,{"link":"https://www.themoviedb.org/movie/118340-guardians-of-the-galaxy/watch?locale=AR","srv":["Disney Plus"]}],[17,{"link":"https://www.themoviedb.org/movie/102899-ant-man/watch?locale=AR","srv":["Disney Plus"]}],[18,{"link":"https://www.themoviedb.org/movie/271110-captain-america-civil-war/watch?locale=AR","srv":["Disney Plus"]}],[16,{"link":"https://www.themoviedb.org/movie/99861-avengers-age-of-ultron/watch?locale=AR","srv":["Disney Plus"]}],[15,{"link":"https://www.themoviedb.org/movie/283995-guardians-of-the-galaxy-vol-2/watch?locale=AR","srv":["Disney Plus"]}],[13,{"link":"https://www.themoviedb.org/movie/100402-captain-america-the-winter-soldier/watch?locale=AR","srv":["Disney Plus"]}],[24,{"link":"https://www.themoviedb.org/movie/284052-doctor-strange/watch?locale=AR","srv":["Disney Plus"]}],[19,{"link":"https://www.themoviedb.org/movie/497698-black-widow/watch?locale=AR","srv":["Disney Plus"]}],[20,{"link":"https://www.themoviedb.org/movie/284054-black-panther/watch?locale=AR","srv":["Disney Plus"]}],[21,{"link":"https://www.themoviedb.org/movie/315635-spider-man-homecoming/watch?locale=AR","srv":["HBO Max"]}],[25,{"link":"https://www.themoviedb.org/movie/284053-thor-ragnarok/watch?locale=AR","srv":["Disney Plus"]}],[28,{"link":"https://www.themoviedb.org/movie/299534-avengers-endgame/watch?locale=AR","srv":["Disney Plus"]}],[27,{"link":"https://www.themoviedb.org/movie/299536-avengers-infinity-war/watch?locale=AR","srv":["Disney Plus"]}],[26,{"link":"https://www.themoviedb.org/movie/363088-ant-man-and-the-wasp/watch?locale=AR","srv":["Disney Plus"]}],[29,{"link":"https://www.themoviedb.org/tv/84958-loki/watch?locale=AR","srv":["Disney Plus"]}],[30,{"link":"https://www.themoviedb.org/tv/91363-what-if/watch?locale=AR","srv":["Disney Plus"]}],[31,{"link":"https://www.themoviedb.org/tv/91363-what-if/watch?locale=AR","srv":["Disney Plus"]}],[32,{"link":"https://www.themoviedb.org/tv/91363-what-if/watch?locale=AR","srv":["Disney Plus"]}],[33,{"link":"https://www.themoviedb.org/tv/138505-marvel-zombies/watch?locale=AR","srv":["Disney Plus"]}],[35,{"link":"https://www.themoviedb.org/tv/88396-the-falcon-and-the-winter-soldier/watch?locale=AR","srv":["Disney Plus"]}],[34,{"link":"https://www.themoviedb.org/tv/85271-wandavision/watch?locale=AR","srv":["Disney Plus"]}],[36,{"link":"https://www.themoviedb.org/movie/566525-shang-chi-and-the-legend-of-the-ten-rings/watch?locale=AR","srv":["Disney Plus"]}],[42,{"link":"https://www.themoviedb.org/tv/92782-ms-marvel/watch?locale=AR","srv":["Disney Plus"]}],[37,{"link":"https://www.themoviedb.org/movie/524434-eternals/watch?locale=AR","srv":["Disney Plus"]}],[38,{"link":"https://www.themoviedb.org/movie/429617-spider-man-far-from-home/watch?locale=AR","srv":["Netflix","Amazon Prime Video","VIX ","ViX Premium Amazon Channel","Universal+ Amazon Channel"]}],[40,{"link":"https://www.themoviedb.org/movie/634649-spider-man-no-way-home/watch?locale=AR","srv":["MovistarTV","Universal+ Amazon Channel","Mercado Play"]}],[39,{"link":"https://www.themoviedb.org/tv/88329-hawkeye/watch?locale=AR","srv":["Disney Plus"]}],[41,{"link":"https://www.themoviedb.org/tv/122226-echo/watch?locale=AR","srv":["Disney Plus"]}],[43,{"link":"https://www.themoviedb.org/tv/92749-moon-knight/watch?locale=AR","srv":["Disney Plus"]}],[46,{"link":"https://www.themoviedb.org/movie/453395-doctor-strange-in-the-multiverse-of-madness/watch?locale=AR","srv":["Disney Plus"]}],[44,{"link":"https://www.themoviedb.org/tv/92783-she-hulk-attorney-at-law/watch?locale=AR","srv":["Disney Plus"]}],[45,{"link":"https://www.themoviedb.org/movie/533535-deadpool-wolverine/watch?locale=AR","srv":["Disney Plus"]}],[48,{"link":"https://www.themoviedb.org/movie/894205-werewolf-by-night/watch?locale=AR","srv":["Disney Plus"]}],[47,{"link":"https://www.themoviedb.org/movie/616037-thor-love-and-thunder/watch?locale=AR","srv":["Disney Plus"]}],[49,{"link":"https://www.themoviedb.org/movie/505642-black-panther-wakanda-forever/watch?locale=AR","srv":["Disney Plus"]}],[50,{"link":"https://www.themoviedb.org/movie/774752-the-guardians-of-the-galaxy-holiday-special/watch?locale=AR","srv":["Disney Plus"]}],[52,{"link":"https://www.themoviedb.org/tv/114472-secret-invasion/watch?locale=AR","srv":["Disney Plus"]}],[53,{"link":"https://www.themoviedb.org/movie/447365-guardians-of-the-galaxy-vol-3/watch?locale=AR","srv":["Disney Plus"]}],[51,{"link":"https://www.themoviedb.org/movie/640146-ant-man-and-the-wasp-quantumania/watch?locale=AR","srv":["Disney Plus"]}],[54,{"link":"https://www.themoviedb.org/tv/84958-loki/watch?locale=AR","srv":["Disney Plus"]}],[56,{"link":"https://www.themoviedb.org/tv/138501-agatha-all-along/watch?locale=AR","srv":["Disney Plus"]}],[60,{"link":"https://www.themoviedb.org/movie/986056-thunderbolts/watch?locale=AR","srv":["Disney Plus"]}],[55,{"link":"https://www.themoviedb.org/movie/609681-the-marvels/watch?locale=AR","srv":["Disney Plus"]}],[59,{"link":"https://www.themoviedb.org/movie/822119-captain-america-brave-new-world/watch?locale=AR","srv":["Disney Plus"]}],[57,{"link":"https://www.themoviedb.org/tv/114471-ironheart/watch?locale=AR","srv":["Disney Plus"]}],[58,{"link":"https://www.themoviedb.org/tv/202555-daredevil-born-again/watch?locale=AR","srv":["Disney Plus"]}],[62,{"link":"https://www.themoviedb.org/tv/202555-daredevil-born-again/watch?locale=AR","srv":["Disney Plus"]}],[63,{"link":"https://www.themoviedb.org/movie/1439930-the-punisher-one-last-kill/watch?locale=AR","srv":["Disney Plus"]}],[65,{"link":"https://www.themoviedb.org/movie/617126-the-fantastic-4-first-steps/watch?locale=AR","srv":["Disney Plus"]}],[61,{"link":"https://www.themoviedb.org/tv/198178-wonder-man/watch?locale=AR","srv":["Disney Plus"]}],[72,{"link":"https://www.themoviedb.org/movie/293660-deadpool/watch?locale=AR","srv":["Disney Plus"]}],[67,{"link":"https://www.themoviedb.org/movie/557-spider-man/watch?locale=AR","srv":["Amazon Prime Video","MovistarTV","VIX ","HBO Max","ViX Premium Amazon Channel","Sony One Amazon Channel"]}],[70,{"link":"https://www.themoviedb.org/movie/1930-the-amazing-spider-man/watch?locale=AR","srv":["Amazon Prime Video","MovistarTV","VIX ","HBO Max","ViX Premium Amazon Channel"]}],[69,{"link":"https://www.themoviedb.org/movie/559-spider-man-3/watch?locale=AR","srv":["Amazon Prime Video","MovistarTV","Claro video","VIX ","HBO Max","ViX Premium Amazon Channel","Sony One Amazon Channel"]}],[71,{"link":"https://www.themoviedb.org/movie/102382-the-amazing-spider-man-2/watch?locale=AR","srv":["Amazon Prime Video","MovistarTV","VIX ","HBO Max","ViX Premium Amazon Channel","Sony One Amazon Channel"]}],[68,{"link":"https://www.themoviedb.org/movie/558-spider-man-2/watch?locale=AR","srv":["Amazon Prime Video","MovistarTV","HBO Max","Sony One Amazon Channel"]}],[74,{"link":"https://www.themoviedb.org/movie/383498-deadpool-2/watch?locale=AR","srv":["Disney Plus"]}],[73,{"link":"https://www.themoviedb.org/movie/263115-logan/watch?locale=AR","srv":["Disney Plus"]}],[75,{"link":"https://www.themoviedb.org/movie/335983-venom/watch?locale=AR","srv":["MovistarTV","HBO Max"]}],[76,{"link":"https://www.themoviedb.org/movie/36657-x-men/watch?locale=AR","srv":["Disney Plus"]}],[78,{"link":"https://www.themoviedb.org/movie/36668-x-men-the-last-stand/watch?locale=AR","srv":["Disney Plus"]}],[77,{"link":"https://www.themoviedb.org/movie/36658-x2/watch?locale=AR","srv":["Disney Plus"]}],[80,{"link":"https://www.themoviedb.org/movie/49538-x-men-first-class/watch?locale=AR","srv":["Disney Plus"]}],[82,{"link":"https://www.themoviedb.org/movie/127585-x-men-days-of-future-past/watch?locale=AR","srv":["Disney Plus"]}],[83,{"link":"https://www.themoviedb.org/movie/246655-x-men-apocalypse/watch?locale=AR","srv":["Disney Plus"]}],[84,{"link":"https://www.themoviedb.org/movie/320288-dark-phoenix/watch?locale=AR","srv":["Disney Plus"]}],[81,{"link":"https://www.themoviedb.org/movie/76170-the-wolverine/watch?locale=AR","srv":["Disney Plus"]}],[79,{"link":"https://www.themoviedb.org/movie/2080-x-men-origins-wolverine/watch?locale=AR","srv":["Disney Plus"]}],[88,{"link":"https://www.themoviedb.org/tv/61889-marvel-s-daredevil/watch?locale=AR","srv":["Disney Plus"]}],[87,{"link":"https://www.themoviedb.org/movie/912649-venom-the-last-dance/watch?locale=AR","srv":["Amazon Prime Video"]}],[89,{"link":"https://www.themoviedb.org/tv/38472-marvel-s-jessica-jones/watch?locale=AR","srv":["Disney Plus"]}],[90,{"link":"https://www.themoviedb.org/tv/62126-marvel-s-luke-cage/watch?locale=AR","srv":["Disney Plus"]}],[86,{"link":"https://www.themoviedb.org/movie/580489-venom-let-there-be-carnage/watch?locale=AR","srv":["MovistarTV","Universal+ Amazon Channel"]}],[85,{"link":"https://www.themoviedb.org/movie/340102-the-new-mutants/watch?locale=AR","srv":["Disney Plus"]}],[91,{"link":"https://www.themoviedb.org/tv/62127-marvel-s-iron-fist/watch?locale=AR","srv":["Disney Plus"]}],[92,{"link":"https://www.themoviedb.org/tv/62285-marvel-s-the-defenders/watch?locale=AR","srv":["Disney Plus"]}],[93,{"link":"https://www.themoviedb.org/tv/67178-marvel-s-the-punisher/watch?locale=AR","srv":["Disney Plus"]}],[94,{"link":"https://www.themoviedb.org/movie/324857-spider-man-into-the-spider-verse/watch?locale=AR","srv":["Amazon Prime Video","MovistarTV","Claro video","Universal+ Amazon Channel"]}],[95,{"link":"https://www.themoviedb.org/movie/569094-spider-man-across-the-spider-verse/watch?locale=AR","srv":["Netflix"]}],[96,{"link":"https://www.themoviedb.org/movie/526896-morbius/watch?locale=AR","srv":["MovistarTV","Universal+ Amazon Channel","Mercado Play"]}],[100,{"link":"https://www.themoviedb.org/movie/1979-fantastic-four-rise-of-the-silver-surfer/watch?locale=AR","srv":["Disney Plus"]}],[98,{"link":"https://www.themoviedb.org/movie/539972-kraven-the-hunter/watch?locale=AR","srv":["Amazon Prime Video"]}],[101,{"link":"https://www.themoviedb.org/movie/166424-fantastic-four/watch?locale=AR","srv":["Disney Plus"]}],[102,{"link":"https://www.themoviedb.org/movie/36647-blade/watch?locale=AR","srv":["Netflix","HBO Max"]}],[97,{"link":"https://www.themoviedb.org/movie/634492-madame-web/watch?locale=AR","srv":["Amazon Prime Video"]}],[99,{"link":"https://www.themoviedb.org/movie/9738-fantastic-four/watch?locale=AR","srv":["Disney Plus"]}],[104,{"link":"https://www.themoviedb.org/movie/36648-blade-trinity/watch?locale=AR","srv":["Netflix","MovistarTV","HBO Max"]}],[103,{"link":"https://www.themoviedb.org/movie/36586-blade-ii/watch?locale=AR","srv":["Netflix","MovistarTV","HBO Max"]}],[106,{"link":"https://www.themoviedb.org/movie/9480-daredevil/watch?locale=AR","srv":["Disney Plus","MovistarTV","Universal+ Amazon Channel","Mercado Play"]}],[105,{"link":"https://www.themoviedb.org/movie/1927-hulk/watch?locale=AR","srv":["Amazon Prime Video","MovistarTV"]}],[107,{"link":"https://www.themoviedb.org/movie/9947-elektra/watch?locale=AR","srv":["Netflix","Disney Plus"]}],[108,{"link":"https://www.themoviedb.org/movie/1250-ghost-rider/watch?locale=AR","srv":["HBO Max","Sony One Amazon Channel"]}],[109,{"link":"https://www.themoviedb.org/movie/71676-ghost-rider-spirit-of-vengeance/watch?locale=AR","srv":["Amazon Prime Video","Mercado Play"]}],[110,{"link":"https://www.themoviedb.org/movie/7220-the-punisher/watch?locale=AR","srv":["HBO Max"]}],[111,{"link":"https://www.themoviedb.org/movie/13056-punisher-war-zone/watch?locale=AR","srv":[]}],[112,{"link":"https://www.themoviedb.org/movie/10658-howard-the-duck/watch?locale=AR","srv":[]}],[114,{"link":"https://www.themoviedb.org/tv/61550-marvel-s-agent-carter/watch?locale=AR","srv":["Disney Plus"]}],[113,{"link":"https://www.themoviedb.org/tv/1403-marvel-s-agents-of-s-h-i-e-l-d/watch?locale=AR","srv":["Disney Plus"]}],[117,{"link":"https://www.themoviedb.org/tv/66190-marvel-s-cloak-dagger/watch?locale=AR","srv":["Disney Plus"]}],[120,{"link":"https://www.themoviedb.org/tv/133903-marvel-s-hit-monkey/watch?locale=AR","srv":["Disney Plus"]}],[115,{"link":"https://www.themoviedb.org/tv/68716-marvel-s-inhumans/watch?locale=AR","srv":["Disney Plus"]}],[118,{"link":"https://www.themoviedb.org/tv/88987-helstrom/watch?locale=AR","srv":["Disney Plus"]}],[119,{"link":"https://www.themoviedb.org/tv/111312-marvel-s-m-o-d-o-k/watch?locale=AR","srv":["Disney Plus"]}]];
 let PRE_VISTOS = []; PRE_VISTOS = [];
 
 /* ── Persistencia en el navegador ──────────────────────────────────────── */
@@ -1592,6 +1808,20 @@ async function incrustarFuentes(){
 
 /* Placa 1200×630 para la vista previa de Twitter. Va como archivo aparte:
    el crawler de Twitter no lee data: URI, necesita una imagen con URL propia. */
+/* Fondo de la placa social. Si está vacío, la placa se arma con el mosaico de
+   portadas. Solo vive en este archivo de trabajo: al exportar se vacía, porque
+   la placa ya salió como JPG aparte y no hace falta cargar el index con esto. */
+let FONDO_PLACA = ""; /*__FONDO__*/
+
+/* Dibuja una imagen recortada al centro para llenar el rectángulo sin deformarla. */
+function calzar(x, img, dx, dy, dw, dh){
+  const ri = img.naturalWidth / img.naturalHeight, rd = dw / dh;
+  let sw = img.naturalWidth, sh = img.naturalHeight, sx = 0, sy = 0;
+  if(ri > rd){ sw = sh * rd; sx = (img.naturalWidth - sw) / 2; }
+  else       { sh = sw / rd; sy = (img.naturalHeight - sh) / 2; }
+  x.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+}
+
 async function armarPlaca(mapa){
   try{ await document.fonts.ready; }catch(_){}
   const W = 1200, H = 630;
@@ -1601,58 +1831,113 @@ async function armarPlaca(mapa){
 
   x.fillStyle = "#07080B"; x.fillRect(0,0,W,H);
 
-  // Tira de portadas al pie, apagada, como textura de fondo
-  const urls = [...mapa.values()].filter(u => String(u).startsWith("data:")).slice(0, 40);
-  if(urls.length){
-    const anchoP = 132, altoP = 198, y = H - altoP + 40;
-    x.save(); x.globalAlpha = .5;
-    for(let i = 0, px = -20; px < W; i++, px += anchoP + 8){
-      try{
-        const img = await cargarImagen(urls[i % urls.length]);
-        x.drawImage(img, px, y, anchoP, altoP);
-      }catch(_){}
-    }
-    x.restore();
-    const g = x.createLinearGradient(0, H - altoP + 20, 0, H);
-    g.addColorStop(0, "rgba(7,8,11,.96)"); g.addColorStop(1, "rgba(7,8,11,.55)");
-    x.fillStyle = g; x.fillRect(0, H - altoP + 20, W, altoP);
+  /* Mosaico a sangre: las portadas llenan el cuadro entero y se recortan al
+     centro. Antes iban en una tira al pie que quedaba cortada por la mitad y
+     encima chocaba con los números. */
+  let ilustrado = false;
+  if(FONDO_PLACA){
+    try{
+      /* Se dibuja más grande y anclado arriba a la izquierda: eso corre la
+         esquina inferior derecha fuera del cuadro, que es donde los generadores
+         de imágenes estampan su marca de agua. Con 1.04 no alcanzaba: la marca
+         arranca cerca del 95% del ancho y quedaba un pedazo adentro. */
+      const s = 1.09;
+      calzar(x, await cargarImagen(FONDO_PLACA), 0, 0, W*s, H*s);
+      ilustrado = true;
+    }catch(_){}
   }
 
-  const glow = x.createRadialGradient(W/2, 0, 0, W/2, 0, 640);
-  glow.addColorStop(0, "rgba(232,35,42,.34)"); glow.addColorStop(1, "rgba(232,35,42,0)");
+  if(!ilustrado){
+    /* Sin arte cargado, la placa se arma con las portadas. Las 27 celdas
+       empiezan por los títulos del Camino a Doomsday: son los más
+       reconocibles y los que hacen que alguien frene el scroll. */
+    const orden = [...OBRAS].sort((a, b) => (b.k ? 1 : 0) - (a.k ? 1 : 0) || a.n - b.n);
+    const urls = orden.map(o => mapa.get(o.n)).filter(u => String(u).startsWith("data:"));
+    if(urls.length){
+      const cols = 9, filas = 3;
+      const pw = Math.ceil(W / cols), ph = Math.ceil(H / filas);
+      let i = 0;
+      for(let f = 0; f < filas; f++){
+        for(let col = 0; col < cols; col++, i++){
+          try{ calzar(x, await cargarImagen(urls[i % urls.length]), col*pw, f*ph, pw, ph); }catch(_){}
+        }
+      }
+    }
+  }
+
+  /* El arte generado ya nace oscuro y compuesto: si le encajo encima la misma
+     cortina que necesita el mosaico de portadas, lo apago del todo. */
+  const cort = x.createLinearGradient(0, 0, W, 0);
+  if(ilustrado){
+    cort.addColorStop(0,   "rgba(7,8,11,.86)");
+    cort.addColorStop(.38, "rgba(7,8,11,.62)");
+    cort.addColorStop(.60, "rgba(7,8,11,.12)");
+    cort.addColorStop(1,   "rgba(7,8,11,0)");
+  } else {
+    cort.addColorStop(0,   "rgba(7,8,11,.985)");
+    cort.addColorStop(.40, "rgba(7,8,11,.94)");
+    cort.addColorStop(.62, "rgba(7,8,11,.60)");
+    cort.addColorStop(1,   "rgba(7,8,11,.26)");
+  }
+  x.fillStyle = cort; x.fillRect(0,0,W,H);
+
+  if(!ilustrado){
+    // Viñeta: cierra los bordes y evita que el mosaico se vea plano.
+    const vig = x.createRadialGradient(W*.55, H*.5, H*.35, W*.55, H*.5, W*.72);
+    vig.addColorStop(0, "rgba(7,8,11,0)"); vig.addColorStop(1, "rgba(7,8,11,.55)");
+    x.fillStyle = vig; x.fillRect(0,0,W,H);
+  } else {
+    /* Segunda red por si la marca de agua sobrevive al recorte: oscurece la
+       esquina en degradé, que sobre un arte ya viñeteado se lee como parte
+       de la iluminación y no como un parche. */
+    const esq = x.createRadialGradient(W, H, 0, W, H, 330);
+    esq.addColorStop(0,   "rgba(7,8,11,1)");
+    esq.addColorStop(.45, "rgba(7,8,11,.98)");
+    esq.addColorStop(.75, "rgba(7,8,11,.62)");
+    esq.addColorStop(1,   "rgba(7,8,11,0)");
+    x.fillStyle = esq; x.fillRect(W-340, H-340, 340, 340);
+  }
+
+  const glow = x.createRadialGradient(340, 40, 0, 340, 40, 720);
+  glow.addColorStop(0, ilustrado ? "rgba(232,35,42,.16)" : "rgba(232,35,42,.42)");
+  glow.addColorStop(1, "rgba(232,35,42,0)");
   x.fillStyle = glow; x.fillRect(0,0,W,H);
 
-  x.fillStyle = "#E8232A"; x.fillRect(72, 84, 58, 5);
+  x.fillStyle = "#E8232A"; x.fillRect(72, 88, 54, 5);
   x.font = '700 21px "Barlow Condensed", Arial Narrow, sans-serif';
-  x.fillStyle = "#E8232A";
-  x.fillText("SAGA DEL MULTIVERSO · FASES 1 A 6", 148, 92);
+  x.fillText("SAGA DEL MULTIVERSO · FASES 1 A 6", 142, 96);
 
-  x.font = '124px Anton, Impact, sans-serif';
+  x.font = '118px Anton, Impact, sans-serif';
   x.fillStyle = "#F2F4F8";
-  x.fillText("MAPA DEL", 70, 232);
-  x.lineWidth = 3; x.strokeStyle = "#E8232A";
-  x.strokeText("UCM", 70, 352);
+  x.fillText("MAPA DEL", 70, 224);
+  // Relleno oscuro + contorno grueso: el contorno fino se perdía al achicarse.
+  x.fillStyle = "#33070A"; x.fillText("UCM", 70, 336);
+  x.lineWidth = 7; x.strokeStyle = "#E8232A"; x.strokeText("UCM", 70, 336);
 
-  x.font = '600 33px "Barlow Condensed", Arial Narrow, sans-serif';
-  x.fillStyle = "#8E98AB";
-  x.fillText("TODO LO QUE PASA ANTES DE AVENGERS: DOOMSDAY", 70, 412);
+  x.font = '600 31px "Barlow Condensed", Arial Narrow, sans-serif';
+  x.fillStyle = "#C3CBDA";
+  x.fillText("TODO LO QUE PASA ANTES DE", 70, 400);
+  x.fillStyle = "#F2F4F8";
+  x.fillText("AVENGERS: DOOMSDAY", 70, 438);
 
   /* Nada con fecha acá adentro: este JPG es un archivo estático que solo cambia
      con un commit, así que un contador de días quedaría congelado y mintiendo. */
   const totalH = Math.round(OBRAS.reduce((a,o) => a + o.dur, 0) / 60);
   const ruta = OBRAS.filter(o => o.k);
-  const datos = [[OBRAS.length, "TÍTULOS"], [totalH + " H", "DE MARATÓN"], [ruta.length, "EN LA RUTA CORTA"]];
+  const datos = [[OBRAS.length, "TÍTULOS"], [totalH + " H", "DE MARATÓN"], [ruta.length, "RUTA CORTA"]];
+
+  x.fillStyle = "rgba(232,35,42,.85)"; x.fillRect(70, 500, 3, 68);
   datos.forEach(([n, r], i) => {
-    const px = 70 + i * 268;
-    x.font = '58px Anton, Impact, sans-serif';
+    const px = 92 + i * 186;
+    x.font = '52px Anton, Impact, sans-serif';
     x.fillStyle = i === 2 ? "#E8232A" : "#F2F4F8";
-    x.fillText(String(n), px, 512);
-    x.font = '600 19px "Barlow Condensed", Arial Narrow, sans-serif';
-    x.fillStyle = "#5C6577";
-    x.fillText(r, px, 542);
+    x.fillText(String(n), px, 542);
+    x.font = '600 18px "Barlow Condensed", Arial Narrow, sans-serif';
+    x.fillStyle = "#7D879B";
+    x.fillText(r, px, 566);
   });
 
-  return c.toDataURL("image/jpeg", .9);
+  return c.toDataURL("image/jpeg", .92);
 }
 
 /* Arma el HTML de una copia. `posters` decide el build:
@@ -1714,6 +1999,8 @@ function construirCopia({ posters, cssFuentes, modo }){
 
   let html = "<!DOCTYPE html>\n" + doc.outerHTML;
   html = meter(html, /const EXPORTADO = (?:true|false);/, 'const EXPORTADO = true;');
+  // El arte de la placa pesa cientos de KB y ya salió como og-image.jpg aparte.
+  html = meter(html, /let FONDO_PLACA = "[^"]*";/, 'let FONDO_PLACA = "";');
   html = meter(html, /const MODO = "[^"]*";/,             'const MODO = "' + modo + '";');
   html = meter(html, /let clave = "[^"]*";/,              'let clave = "";');   // la clave NO viaja en la copia
   html = meter(html, /const TMDB_AUTO = (?:true|false);/, 'const TMDB_AUTO = false;');
@@ -1838,6 +2125,13 @@ function actualizarContadores(lista) {
   if (!lista.length) {
        $("#contador").innerHTML = `Sin títulos con estos filtros`;
        $("#barraProgreso").style.width = `0%`;
+  } else if (F.estado.has("visto") && !F.estado.has("pendiente")) {
+       /* Con este filtro todo lo visible está visto por definición: decir
+          "maratón completa" sería mentir. Acá se informa, no se felicita. */
+       const u = universo(), hechos = u.filter(o => vistos.has(o.n)).length;
+       const p = u.length ? Math.round(hechos / u.length * 100) : 0;
+       $("#contador").innerHTML = `Ya viste <b>${lista.length}</b> · <b>${horas(minLista)}</b> · <b>${p}%</b> de la ruta`;
+       $("#barraProgreso").style.width = `${p}%`;
   } else if (minVistos === 0) {
        $("#contador").innerHTML = `<b>${lista.length}</b> títulos · <b>${Math.round(minLista/60)} h</b> por delante`;
        $("#barraProgreso").style.width = `0%`;
@@ -1892,13 +2186,19 @@ const ALIAS = {
 const IDX = new Map();
 function indice(o){
   if(!IDX.has(o.n)){
-    IDX.set(o.n, norm([
+    const base = norm([
       o.t, o.to || "", o.q || "", o.r, o.i,
       (o.d || []).join(" "), o.era, o.m,
       tipoRot[o.tp] || "", TRAMOS[o.g] || "",
       o.f === 0 ? "legado franquicias" : "fase " + o.f,
       o.c === "rama" ? "rama multiverso" : "linea principal"
-    ].join(" ")));
+    ].join(" "));
+    /* Tres formas del mismo texto, porque la puntuación estorba de dos maneras
+       opuestas: "S.H.I.E.L.D." solo se encuentra si se borran los puntos, y
+       "Cloak & Dagger" solo si el símbolo se convierte en espacio. */
+    const pegado = base.replace(/[.\-·'&:,]/g, "");
+    const suelto = base.replace(/[.\-·'&:,]/g, " ").replace(/\s+/g, " ");
+    IDX.set(o.n, base + " " + pegado + " " + suelto);
   }
   return IDX.get(o.n);
 }
@@ -1911,18 +2211,33 @@ function terminos(bruto){
   for(const k in ALIAS){
     if(t.includes(k)) out.push(t.split(k).join(ALIAS[k]));
   }
+  /* Variante sin separadores para los dos lados: así "x men" encuentra
+     "X-Men" y "hit monkey" encuentra "Hit-Monkey". El índice guarda la
+     misma forma comprimida. */
+  out.slice().forEach(v => { const c = v.replace(/[\s.\-·'&:,]/g, ""); if(c && c !== v) out.push(c); });
   return [...new Set(out)];
 }
 
 function filtrar(){
   const terms = terminos(q);
   return universo().filter(o=>{
-    if(tipo!=="todo"&&o.tp!==tipo)return false;
-    if(canon!=="todo"&&o.c!==canon)return false;
-    if(fase!=="todo"&&String(o.f)!==fase)return false;
+    if(!pasa("tipo",  o.tp))              return false;
+    if(!pasa("canon", o.c))               return false;
+    if(!pasa("fase",  String(o.f)))       return false;
+    if(!pasa("estado", vistos.has(o.n) ? "visto" : "pendiente")) return false;
+    /* Cada término se parte en palabras y se exigen todas, no la frase entera
+       seguida: así "hulk 2003" encuentra la de Ang Lee, que tiene el título en
+       un campo y el año en otro. */
     if(terms.length){
       const txt = indice(o);
-      if(!terms.some(x => txt.includes(x))) return false;
+      const cumple = x => {
+        const ws = x.split(" ");
+        /* Con una palabra de una sola letra el modo "todas las palabras" se
+           desmadra: "x men" pasaría a matchear cualquier cosa que tenga una x.
+           En ese caso se exige la frase tal cual. */
+        return ws.every(w => w.length >= 2) ? ws.every(w => txt.includes(w)) : txt.includes(x);
+      };
+      if(!terms.some(cumple)) return false;
     }
     return true;
   }).sort((a,b)=>orden==="crono"?a.n-b.n:(a.e<b.e?-1:a.e>b.e?1:a.n-b.n));
@@ -1987,7 +2302,14 @@ function tarjeta(o,i){
 function render(){
   const lista=filtrar();
   if(!lista.length){
-    lienzo.innerHTML=`<div class="grilla"><p class="nada">No hay títulos con esos filtros. Probá aflojar alguno.</p></div>`;
+    /* El vacío por el filtro de estado no es un error, es una respuesta:
+       decirle "aflojá los filtros" a alguien que terminó su ruta es absurdo. */
+    const soloVistos = F.estado.has("visto") && !F.estado.has("pendiente");
+    const soloFaltan = F.estado.has("pendiente") && !F.estado.has("visto");
+    const msg = soloVistos && !vistos.size ? "Todavía no marcaste ningún título como visto."
+              : soloFaltan && universo().every(o => vistos.has(o.n)) ? "No te falta nada por acá. Terminaste esta ruta 🍿"
+              : "Ningún título cumple con todos los filtros a la vez. Probá sacar alguno.";
+    lienzo.innerHTML=`<div class="grilla"><p class="nada">${msg}</p></div>`;
     actualizarContadores([]);
     return;
   }
@@ -2268,7 +2590,17 @@ function cerrar(desdeHash){
    Sirve para compartir un título suelto y hace que el botón "atrás" del
    celular cierre la ficha en vez de salirse del sitio. */
 const TITULO_BASE = document.title;
-const hashDeObra = o => slug(o.t);
+
+/* Si dos títulos generan el mismo slug —pasa con Daredevil o The Punisher, que
+   tienen película y serie homónimas— se les agrega el año. Sin esto, ambas
+   fichas compartirían URL y el link directo abriría siempre la misma. */
+const SLUGS = (() => {
+  const cuenta = {}, mapa = new Map();
+  OBRAS.forEach(o => { const s = slug(o.t); cuenta[s] = (cuenta[s] || 0) + 1; });
+  OBRAS.forEach(o => { const s = slug(o.t); mapa.set(o.n, cuenta[s] > 1 ? s + "-" + o.e.slice(0,4) : s); });
+  return mapa;
+})();
+const hashDeObra = o => SLUGS.get(o.n);
 let navegando = false;
 
 function ponerHash(h){
@@ -2350,16 +2682,39 @@ document.addEventListener("keydown",e=>{
 function grupo(sel,cb){document.querySelectorAll(sel).forEach(b=>b.addEventListener("click",()=>{
   document.querySelectorAll(sel).forEach(x=>x.classList.toggle("on",x===b)); cb(b); render();}));}
 grupo(".orden",b=>orden=b.dataset.orden);
-grupo(".tipo",b=>tipo=b.dataset.tipo);
-grupo(".canon",b=>canon=b.dataset.canon);
 grupo(".vista",b=>vista=b.dataset.vista);
-$("#fase").addEventListener("change",e=>{fase=e.target.value;render();});
-$("#q").addEventListener("input",e=>{q=e.target.value;render();});
+
+/* ── Filtros acumulables ───────────────────────────────────────────────── */
+function pintarFiltros(){
+  document.querySelectorAll(".f-op").forEach(b => {
+    const on = F[b.dataset.grupo].has(b.dataset.valor);
+    b.classList.toggle("on", on);
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+  const n = Object.values(F).reduce((a, s) => a + s.size, 0);
+  const bl = $("#bLimpiar");
+  bl.hidden = !hayFiltros();
+  bl.textContent = n ? "✕ Limpiar filtros (" + n + ")" : "✕ Limpiar búsqueda";
+}
+
+document.querySelectorAll(".f-op").forEach(b => b.addEventListener("click", () => {
+  const s = F[b.dataset.grupo], v = b.dataset.valor;
+  s.has(v) ? s.delete(v) : s.add(v);
+  pintarFiltros(); render();
+}));
+
+$("#bLimpiar").addEventListener("click", () => {
+  Object.values(F).forEach(s => s.clear());
+  q = ""; $("#q").value = "";
+  pintarFiltros(); render();
+  aviso("Filtros limpios");
+});
+$("#q").addEventListener("input",e=>{q=e.target.value;pintarFiltros();render();});
 /* ── Los dos modos de leer el mapa ─────────────────────────────────────── */
 const COPY = {
   completa: {
     sub: 'La guía definitiva del <b>Universo Cinematográfico de Marvel</b>',
-    intro: 'Las <strong>' + OBRAS.length + ' películas, series y especiales</strong> que preparan el terreno para el gran choque del 18 de diciembre de 2026: el UCM completo, más los <strong>X-Men de Fox</strong>, la etapa <strong>Netflix</strong> y el universo de <strong>Sony</strong>. Están ordenadas por cronología interna o por fecha de estreno. Tocá cualquier título para ver de qué trata y <strong>marcá lo que ya viste</strong> para hacer un seguimiento de tu maratón.'
+    intro: 'Las <strong>' + OBRAS.length + ' películas y series</strong> de Marvel en pantalla, de <em>Howard el pato</em> en 1986 al choque del 18 de diciembre de 2026: el UCM completo, más los <strong>X-Men de Fox</strong>, la etapa <strong>Netflix</strong>, el <strong>Spider-Verse</strong>, <strong>Blade</strong> y el universo de <strong>Sony</strong>. Son muchas, así que los <strong>filtros se acumulan</strong>: podés pedir películas de la Fase 4 que te falten, y sacarlos todos de una con un botón.'
   },
   doomsday: {
     sub: 'Todo lo que pasa <b>antes de Avengers: Doomsday</b>',
@@ -2460,8 +2815,6 @@ function armarApoyo(){
     $("#linkCafecito").href = url;
     $("#graciasCafecito").href = url;
   }
-  // Sin URL pública igual sirve: comparte el texto por el menú nativo del celular.
-  $("#bCompartir").hidden = false;
 
   /* La firma es lo único que convierte a alguien que usó el mapa en alguien
      que sabe quién lo hizo y cómo encontrarlo. */
@@ -2664,12 +3017,34 @@ $("#bCodigo").addEventListener("click", () => {
 
 /* Despliegue de filtros en pantallas chicas. En escritorio el botón está oculto
    por CSS y el panel siempre visible, así que esto no interfiere. */
+function desplegar(boton, panel, abrir){
+  const b = $(boton), p = $(panel);
+  const on = abrir === undefined ? p.hidden : abrir;
+  p.hidden = !on;
+  b.classList.toggle("on", on);
+  b.setAttribute("aria-expanded", on ? "true" : "false");
+  if(on) p.scrollTop = 0;
+  return on;
+}
+
 $("#bFiltros").addEventListener("click", () => {
-  const panel = $("#filtros"), abierto = panel.classList.toggle("abierto");
-  $("#bFiltros").classList.toggle("on", abierto);
-  $("#bFiltros").setAttribute("aria-expanded", abierto ? "true" : "false");
-  if(abierto) panel.scrollTop = 0;
+  desplegar("#bFiltros", "#filtros");
+  desplegar("#bMaraton", "#menuMaraton", false);   // uno por vez
 });
+
+$("#bMaraton").addEventListener("click", e => {
+  e.stopPropagation();
+  desplegar("#bMaraton", "#menuMaraton");
+});
+
+// El menú se cierra solo al tocar afuera o con Escape, como cualquier menú.
+document.addEventListener("click", e => {
+  if(!e.target.closest(".menu-caja")) desplegar("#bMaraton", "#menuMaraton", false);
+});
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape" && !$("#menuMaraton").hidden) desplegar("#bMaraton", "#menuMaraton", false);
+});
+$("#menuMaraton").addEventListener("click", () => desplegar("#bMaraton", "#menuMaraton", false));
 
 /* Al elegir un filtro con el teclado del celular abierto, conviene bajarlo
    para que se vean los resultados. */
@@ -2681,6 +3056,7 @@ actualizarReloj();
 const fd = $("#fechaDatos");
 if(fd) fd.textContent = "Contenido revisado al " + fmt(FECHA_DATOS) + ". ";
 rotularModos();
+pintarFiltros();
 setModo(modoInicial, false);
 hitosVistos = vistos.size >= OBRAS.length ? 2 : vistos.size >= 20 ? 1 : 0;  // no festejar lo que ya estaba marcado
 render();
