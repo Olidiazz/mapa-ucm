@@ -255,18 +255,39 @@ main { padding: 34px 0 20px; }
 .d-logo { font-family: var(--body); font-weight: 900; letter-spacing: -0.5px; font-size: 15px; line-height: 1; }
 .d-text { font-size: 12px; color: rgba(255,255,255,.62); line-height: 1; padding-top: 2px; }
 .plataforma.futuro { cursor: default; background: #1a1a1a; border-color: #333; color: var(--gris); pointer-events: none; }
-.plataforma.p-disney  { background: #00126b; border-color: #16268f; }
-.plataforma.p-disney:hover  { background: #001a9c; border-color: #2b3cc4; }
-.plataforma.p-netflix { background: #1b0508; border-color: #7a1119; }
-.plataforma.p-netflix:hover { background: #2c090d; border-color: #e50914; }
-.plataforma.p-prime   { background: #04212e; border-color: #0b5b7d; }
-.plataforma.p-prime:hover   { background: #063245; border-color: #1aa7d8; }
-.plataforma.p-max     { background: #14063a; border-color: #3c1c8f; }
-.plataforma.p-max:hover     { background: #1d0a52; border-color: #5b2fd0; }
-.plataforma.p-apple   { background: #131315; border-color: #45454b; }
-.plataforma.p-apple:hover   { background: #1d1d21; border-color: #6f6f78; }
-.plataforma.p-para    { background: #041a3d; border-color: #12417f; }
-.plataforma.p-para:hover    { background: #062350; border-color: #2a6fd0; }
+/* Cada plataforma con su color de marca. El fondo va oscurecido y el borde
+   lleva el tono real: a todo color, doce botones saturados uno al lado del
+   otro tapan el texto de la ficha. */
+.plataforma.p-disney   { background: #0b1560; border-color: #1f3bc4; }
+.plataforma.p-disney:hover   { background: #12208c; border-color: #3a57ea; }
+.plataforma.p-netflix  { background: #1b0508; border-color: #e50914; }
+.plataforma.p-netflix:hover  { background: #2c090d; border-color: #ff2733; }
+.plataforma.p-prime    { background: #042432; border-color: #00a8e1; }
+.plataforma.p-prime:hover    { background: #06364b; border-color: #3ec6f0; }
+.plataforma.p-max      { background: #17073f; border-color: #7b2ff2; }
+.plataforma.p-max:hover      { background: #230b5c; border-color: #9d5bff; }
+.plataforma.p-movistar { background: #04263c; border-color: #019df4; }
+.plataforma.p-movistar:hover { background: #063a5a; border-color: #3fb8ff; }
+.plataforma.p-mercado  { background: #ffe600; border-color: #ffe600; color: #16160a; }
+.plataforma.p-mercado:hover  { background: #fff23f; border-color: #fff23f; color: #16160a; }
+.plataforma.p-mercado .d-logo { color: #16160a; }
+.plataforma.p-claro    { background: #2c0806; border-color: #da291c; }
+.plataforma.p-claro:hover    { background: #430c09; border-color: #f0483b; }
+.plataforma.p-vix      { background: #2b0a2c; border-color: #d6157f; }
+.plataforma.p-vix:hover      { background: #400f42; border-color: #ff3fa0; }
+.plataforma.p-apple    { background: #131315; border-color: #6f6f78; }
+.plataforma.p-apple:hover    { background: #1d1d21; border-color: #a1a1a8; }
+.plataforma.p-para     { background: #041a3d; border-color: #0064ff; }
+.plataforma.p-para:hover     { background: #062350; border-color: #3d8bff; }
+.plataforma.p-mubi     { background: #0a0a0a; border-color: #5a5a5a; }
+.plataforma.p-mubi:hover     { background: #141414; border-color: #8a8a8a; }
+/* El botón que sí lleva al título exacto: es la acción principal del bloque. */
+.plataforma.p-directo  { background: var(--rojo); border-color: var(--rojo); }
+.plataforma.p-directo:hover  { background: #f4353c; border-color: #f4353c; }
+/* Etiqueta informativa: dice dónde está, no es un enlace. */
+.plataforma.etiqueta   { cursor: default; padding: 8px 14px; font-size: 12px; }
+.plataforma.etiqueta:hover { filter: none; }
+.nota-ver b { color: var(--blanco); font-weight: 600; }
 .plataforma.p-otro    { background: #14181f; border-color: var(--borde); color: var(--gris); }
 .plataforma.p-otro:hover    { background: #1c222c; border-color: #3c4557; color: var(--blanco); }
 /* Es una aclaración, no un rótulo: en versalitas y a dos renglones pesaba
@@ -312,6 +333,19 @@ footer h3 { font-family: var(--cond); font-weight: 700; font-size: 12px; letter-
 footer ul { padding-left: 18px; margin: 0 0 22px; max-width: 88ch; }
 footer li { margin: 7px 0; }
 footer code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; background: #12161E; border: 1px solid var(--borde); padding: 1px 6px; color: #B9C2D2; }
+
+/* El min() evita que la columna fuerce un ancho mayor que la pantalla en
+   celulares angostos. El max-width la deja en 3 columnas: con 6 secciones
+   quedan dos filas parejas en vez de cuatro columnas desbalanceadas. */
+.guia { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(310px, 100%), 1fr));
+  gap: 26px 34px; margin-bottom: 24px; max-width: 1080px; }
+.guia section { border-top: 1px solid var(--borde); padding-top: 14px; }
+.guia h4 { font-family: var(--cond); font-weight: 700; font-size: 12.5px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--blanco); margin: 0 0 9px; }
+.guia p { margin: 0 0 9px; font-size: 14.5px; line-height: 1.6; color: var(--gris); max-width: 62ch; }
+.guia p:last-child { margin-bottom: 0; }
+.guia strong { color: var(--blanco); font-weight: 600; }
+.guia-nota { font-size: 13.5px; color: var(--gris2); max-width: 88ch; margin: 0 0 22px; }
 
 .panel-clave { border: 1px solid var(--borde); border-left: 3px solid var(--rojo); background: #0D1017; padding: 16px 18px; margin-top: 10px; }
 .panel-clave p { margin: 0 0 12px; font-size: 14.5px; color: var(--gris); max-width: 78ch; }
@@ -604,16 +638,45 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
       <a class="cafecito" id="linkCafecito" href="https://cafecito.app/olikushgg" target="_blank" rel="noopener">☕ Invitame un cafecito</a>
     </section>
 
-    <h3>Cómo leer este mapa</h3>
-    <ul>
-      <li><strong>Borde punteado</strong> = rama del multiverso. No pasa en la línea principal, pero explica de dónde salen varias piezas de Doomsday.</li>
-      <li><strong>Estrella roja</strong> = título imprescindible. El botón <em>Ruta express</em> deja solo las conexiones más directas.</li>
-      <li>Las <strong>fechas internas</strong> son aproximadas y se ajustan según la narrativa oficial hasta agosto de 2026.</li>
-      <li>El tiempo de la maratón suma los minutos completos para darte una idea del compromiso que requiere ponerte al día.</li>
-      <li>Lo que marcás como <strong>visto</strong> queda guardado en este navegador: podés cerrar la pestaña y seguir después. El botón <em>Reiniciar maratón</em> borra todo el progreso.</li>
-      <li>Dentro de cada ficha, las flechas <strong>← →</strong> del teclado te llevan al título anterior y al siguiente sin cerrar la ventana.</li>
-      <li><strong>¿Dónde ver?</strong> muestra las plataformas donde el título está disponible en Argentina según TMDB. El botón abre el buscador de esa plataforma con el título ya cargado.</li>
-    </ul>
+    <h3>Cómo usar este mapa</h3>
+    <div class="guia">
+
+      <section>
+        <h4>1 · Elegí por dónde entrar</h4>
+        <p>Arriba de todo hay dos botones. <strong>Guía completa</strong> es todo el universo en orden. <strong>Camino a Doomsday</strong> deja solo lo indispensable para entender la película de diciembre: es la ruta corta, y de lejos la más recomendable si vas con el tiempo justo.</p>
+        <p>Dentro de <strong>Filtros</strong> hay además recorridos temáticos —Spider-Man, Mutantes, El multiverso, Cósmico, The Defenders Saga— por si querés seguir un solo hilo. Todo lo que ves abajo cambia según el que elijas, incluidos los números de la cabecera.</p>
+      </section>
+
+      <section>
+        <h4>2 · Marcá lo que ya viste</h4>
+        <p>Tocá cualquier título y usá <strong>Marcar como visto</strong>. Queda guardado en este navegador, así que podés cerrar todo y seguir mañana. La barra de arriba te dice cuánto te falta en tiempo real.</p>
+        <p><strong>Si querés seguir en otro celular o computadora</strong>, tocá <strong>🔑 Mi código</strong>: te da un código corto que pegás del otro lado y recuperás tu maratón. Conviene guardarlo en algún lado, sobre todo en iPhone: Safari borra los datos de los sitios que no visitás por una semana.</p>
+      </section>
+
+      <section>
+        <h4>3 · Cómo leer las tarjetas</h4>
+        <p><strong>Borde punteado</strong> = rama del multiverso: no pasa en la línea principal, pero explica de dónde salen varias piezas de Doomsday. <strong>Estrella roja</strong> = título imprescindible, los mismos que arma el Camino a Doomsday.</p>
+        <p>Los estrenos más recientes vienen con los <strong>spoilers tapados</strong>. Podés destaparlos de a uno desde su ficha, o todos juntos con el botón de la barra.</p>
+      </section>
+
+      <section>
+        <h4>4 · Dónde verlo en Argentina</h4>
+        <p>Cada ficha muestra en qué plataformas está disponible acá, según TMDB. El botón te abre el buscador de esa plataforma con el título ya cargado. Si todavía no se estrenó, te dice cuándo.</p>
+      </section>
+
+      <section>
+        <h4>5 · Atajos</h4>
+        <p>Dentro de una ficha, las flechas <strong>← →</strong> del teclado te llevan al anterior y al siguiente sin cerrar la ventana, y <strong>Esc</strong> la cierra. El botón <strong>🔗</strong> copia el link directo a ese título, para mandárselo a alguien.</p>
+        <p>La <strong>calculadora</strong> de la cabecera te dice, según las horas por día que puedas, si llegás o no al 18 de diciembre.</p>
+      </section>
+
+      <section>
+        <h4>6 · Contá cómo vas</h4>
+        <p><strong>🖼 Mi tarjeta</strong> genera una imagen con tu avance para adjuntar donde quieras. <strong>↗ Compartir</strong> arma el texto solo. Y <strong>↺ Reiniciar maratón</strong> borra todo lo marcado, por si querés empezar de nuevo.</p>
+      </section>
+
+    </div>
+    <p class="guia-nota">Las fechas internas son aproximadas: cuando la narrativa oficial no las fija, se estiman. Los tiempos de maratón suman los minutos completos, sin descontar créditos.</p>
 
     <p id="bajarOffline" hidden=""></p>
 
@@ -1968,16 +2031,63 @@ function activarDiferidas(){
 window.addEventListener("beforeprint", pintarTodas);
 
 /* ── Plataformas de streaming en Argentina ─────────────────────────────── */
+/* El orden importa: "ViX Premium Amazon Channel" tiene que caer en Prime Video,
+   porque se mira ahí adentro. Por eso Amazon va antes que ViX.
+   Las que no tienen buscador propio confiable caen al enlace regional de TMDB
+   en vez de a una URL inventada que puede dar 404. */
+/* `url` solo está en las plataformas cuyo buscador público verifiqué que anda.
+   Disney+ NO lo tiene: /search, /browse/search y /es-419/browse/search dan
+   "página no encontrada" en un navegador real. Los deep links tipo
+   /es-ar/browse/entity-{uuid} sí funcionan, pero ese uuid no se puede obtener
+   de forma confiable, así que esas plataformas se muestran como etiqueta y el
+   salto lo hace un único botón a la ficha regional de TMDB, que sí es del
+   título exacto y ahí adentro está el enlace directo a cada una.
+   El orden importa: los canales de Amazon caen en Prime Video, que es donde
+   realmente se miran, y por eso Amazon va antes que ViX. */
 const PLATAFORMAS = [
-  {re:/disney/i,             nom:"Disney+",     cls:"p-disney",  url:t=>"https://www.disneyplus.com/es-419/search?q="+t},
-  {re:/star\+|star plus/i,   nom:"Disney+",     cls:"p-disney",  url:t=>"https://www.disneyplus.com/es-419/search?q="+t},
-  {re:/netflix/i,            nom:"Netflix",     cls:"p-netflix", url:t=>"https://www.netflix.com/search?q="+t},
-  {re:/amazon|prime video/i, nom:"Prime Video", cls:"p-prime",   url:t=>"https://www.primevideo.com/search?phrase="+t},
-  {re:/hbo|\bmax\b/i,        nom:"Max",         cls:"p-max",     url:t=>"https://play.max.com/search?q="+t},
-  {re:/apple/i,              nom:"Apple TV",    cls:"p-apple",   url:t=>"https://tv.apple.com/ar/search?term="+t},
-  {re:/paramount/i,          nom:"Paramount+",  cls:"p-para",    url:t=>"https://www.paramountplus.com/ar/search/?q="+t},
-  {re:/mubi/i,               nom:"MUBI",        cls:"p-otro",    url:t=>"https://mubi.com/es/ar/search?query="+t}
+  {k:"disney",   re:/disney|star\+|star plus/i, nom:"Disney+",     cls:"p-disney"},
+  {k:"netflix",  re:/netflix/i,                 nom:"Netflix",     cls:"p-netflix",  url:t=>"https://www.netflix.com/search?q="+t},
+  {k:"prime",    re:/amazon|prime video/i,      nom:"Prime Video", cls:"p-prime",    url:t=>"https://www.primevideo.com/search?phrase="+t},
+  {k:"max",      re:/hbo|\bmax\b/i,             nom:"HBO Max",     cls:"p-max"},
+  {k:"movistar", re:/movistar/i,                nom:"MovistarTV",  cls:"p-movistar"},
+  {k:"mercado",  re:/mercado/i,                 nom:"Mercado Play",cls:"p-mercado"},
+  {k:"claro",    re:/claro/i,                   nom:"Claro video", cls:"p-claro"},
+  {k:"vix",      re:/vix/i,                     nom:"ViX",         cls:"p-vix"},
+  {k:"apple",    re:/apple/i,                   nom:"Apple TV",    cls:"p-apple",    url:t=>"https://tv.apple.com/ar/search?term="+t},
+  {k:"para",     re:/paramount/i,               nom:"Paramount+",  cls:"p-para",     url:t=>"https://www.paramountplus.com/ar/search/?q="+t},
+  {k:"mubi",     re:/mubi/i,                    nom:"MUBI",        cls:"p-mubi",     url:t=>"https://mubi.com/es/ar/search?query="+t}
 ];
+
+/* ── Enlaces directos al título, sacados a mano ────────────────────────────
+   Van solo en los 20 del Camino a Doomsday: abren la ficha exacta en la
+   plataforma, sin buscador de por medio. Los de Disney+ son la entity, que
+   es el único formato que funciona sin iniciar sesión.
+   Si alguno deja de andar, es porque el título cambió de servicio: se saca
+   la línea y vuelve al botón «Ir a verla», que nunca queda roto. */
+const DP = u => "https://www.disneyplus.com/es-ar/browse/entity-" + u;
+const DIRECTOS = {
+  2:  {disney: DP("8e68c43a-117c-4f4d-b217-0db106a1a614")},
+  6:  {disney: DP("0c520152-b81f-4c20-9310-003debd1947e")},
+  16: {disney: DP("42329b99-0953-4f1a-9420-a0dbf7733e95")},
+  18: {disney: DP("2bd19267-1387-4b51-98e6-5189ff28e9c9")},
+  27: {disney: DP("9a136e06-852a-41bf-b71d-fa061cb43225")},
+  28: {disney: DP("b39aa962-be56-4b09-a536-98617031717f")},
+  29: {disney: DP("8f8c5cbb-e5ba-4285-9e2c-86abcac9fd50")},   // la serie: adentro elegís temporada
+  34: {disney: DP("90affd1f-0851-48bc-9cab-c142d5c9c20c")},
+  /* De las cuatro que daba JustWatch acá, MovistarTV y Mercado Play redirigían
+     al home: quedaron afuera. Estas dos las abrí y muestran el título. */
+  40: {prime: "https://app.primevideo.com/detail?gti=amzn1.dv.gti.7bdd5eef-7125-4435-be2c-c6063bccbb10",
+       claro: "https://www.clarovideo.com/argentina/vcard/homeuser/Spider-Man-Sin-Camino-a-Casa/1084355"},
+  45: {disney: DP("120ae1e6-2240-4924-a4ce-f8de6e28b0b1")},
+  46: {disney: DP("6fe6062c-2499-4f44-a48a-fc93f59cb504")},
+  51: {disney: DP("eb1453f3-48aa-4af0-85f5-8ca4916c7415")},
+  54: {disney: DP("8f8c5cbb-e5ba-4285-9e2c-86abcac9fd50")},
+  59: {disney: DP("3064ac7f-ef4d-4f89-b92f-b5524da92a72")},
+  60: {disney: DP("f51dce23-7d8f-490a-9f0c-be1b5432c2a9")},
+  65: {disney: DP("2142a7a9-4c49-438d-a492-296c4e08b714")},
+  76: {disney: DP("e9f59c82-de76-4a18-a849-192532ff9b2d")},
+  82: {disney: DP("5b3d1005-eb3b-41bb-8ac6-a025263d8106")}
+};
 
 function dondeVer(o){
   const hoy = new Date();
@@ -1991,7 +2101,19 @@ function dondeVer(o){
 
   const busq = encodeURIComponent(o.to || o.t);
   const info = PROVEEDORES.get(o.n);
-  let botones = "", vistas = new Set();
+
+  /* Estrenada en cine hace poco y todavía sin plataforma: está en salas.
+     Mandar a buscarla a Disney+ sería un dato falso, y justo pasa con los
+     títulos más buscados, que son los que acaban de salir. */
+  const dias = (hoy - estreno) / 86400000;
+  if(o.m === "Cine" && dias < 120 && !(info && info.srv && info.srv.length)){
+    return `<div class="plataformas"><div class="plataforma futuro">
+      <span class="d-logo">🎬</span><span>En cines · todavía no está en streaming</span>
+    </div></div><p class="nota-ver">Estrenada el ${fmt(o.e)} · suele tardar unos meses en llegar a Disney+</p>`;
+  }
+
+  let piezas = "", vistas = new Set(), sueltas = 0, hayDirecto = false;
+  const dl = DIRECTOS[o.n] || {};
 
   if(info && info.srv && info.srv.length){
     info.srv.forEach(nombre => {
@@ -1999,27 +2121,55 @@ function dondeVer(o){
       const nom = p ? p.nom : nombre;
       if(vistas.has(nom)) return;
       vistas.add(nom);
-      const href = p ? p.url(busq) : (info.link || "");
-      if(!href) return;
-      botones += `<a href="${href}" target="_blank" rel="noopener" class="plataforma ${p ? p.cls : "p-otro"}">
-        <span class="d-logo">▶</span><span>Ver en ${nom}</span></a>`;
+      const cls = p ? p.cls : "p-otro";
+      const exacto = p && dl[p.k];
+
+      if(exacto){
+        // Un clic hasta la ficha del título en la plataforma.
+        hayDirecto = true;
+        piezas += `<a href="${exacto}" target="_blank" rel="noopener" class="plataforma ${cls}" title="Abre el título directamente en ${nom}">
+          <span class="d-logo">▶</span><span>Ver en ${nom}</span></a>`;
+      } else if(p && p.url){
+        piezas += `<a href="${p.url(busq)}" target="_blank" rel="noopener" class="plataforma ${cls}" title="Abre el buscador de ${nom} con el título cargado">
+          <span class="d-logo">▶</span><span>Ver en ${nom}</span></a>`;
+      } else {
+        // Sin buscador público: se muestra dónde está, y el salto lo hace el botón de abajo.
+        sueltas++;
+        piezas += `<span class="plataforma etiqueta ${cls}">${nom}</span>`;
+      }
     });
   }
 
-  if(!botones){
-    botones = `<a href="https://www.disneyplus.com/es-419/search?q=${busq}" target="_blank" rel="noopener" class="plataforma p-disney">
-      <span class="d-logo">▶</span><span>Buscar en Disney+</span></a>`;
-  }
-  if(info && info.link){
-    botones += `<a href="${info.link}" target="_blank" rel="noopener" class="plataforma p-otro">
-      <span>Todas las opciones en Argentina</span></a>`;
+  /* Enlaces verificados a mano que TMDB no lista: se agregan igual. Claro video
+     tiene Sin camino a casa aunque no aparezca en su lista de proveedores. */
+  Object.keys(dl).forEach(k => {
+    const p = PLATAFORMAS.find(x => x.k === k);
+    if(!p || vistas.has(p.nom)) return;
+    vistas.add(p.nom); hayDirecto = true;
+    piezas += `<a href="${dl[k]}" target="_blank" rel="noopener" class="plataforma ${p.cls}" title="Abre el título directamente en ${p.nom}">
+      <span class="d-logo">▶</span><span>Ver en ${p.nom}</span></a>`;
+  });
+
+  /* El botón «Ir a verla» solo hace falta cuando quedó alguna plataforma sin
+     enlace propio. Si todas abren directo, sobra y se saca. */
+  const directo = (sueltas && info && info.link)
+    ? `<a href="${info.link}" target="_blank" rel="noopener" class="plataforma p-directo">
+        <span class="d-logo">▶</span><span>Ir a verla</span></a>`
+    : "";
+
+  if(!piezas && !directo){
+    return `<div class="plataformas"><div class="plataforma futuro">
+      <span class="d-logo">🔍</span><span>Sin datos de plataforma en Argentina</span>
+    </div></div>`;
   }
 
-  const nota = info && vistas.size
-    ? `<p class="nota-ver">Disponibilidad en Argentina según TMDB · el botón te deja en el buscador de la plataforma</p>`
-    : `<p class="nota-ver">Sin datos de plataforma para este título · el botón te deja en el buscador de Disney+ Argentina</p>`;
+  const nota = sueltas
+    ? `<p class="nota-ver">Disponible en Argentina según TMDB. <b>Ir a verla</b> te abre la ficha del título con el enlace directo a cada plataforma.</p>`
+    : hayDirecto
+      ? `<p class="nota-ver">El botón abre el título directamente en la plataforma.</p>`
+      : `<p class="nota-ver">Disponible en Argentina según TMDB.</p>`;
 
-  return `<div class="plataformas">${botones}</div>${nota}`;
+  return `<div class="plataformas">${directo}${piezas}</div>${nota}`;
 }
 
 function abrir(id, desdeHash){
