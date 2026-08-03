@@ -575,7 +575,7 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
 
 @media print { .barra, .modal-pie, .hero::before { display: none; } body { background: #fff; color: #000; } }
 </style>
-<meta property="og:type" content="website"><meta property="og:site_name" content="Mapa del UCM"><meta property="og:title" content="Mapa del UCM · Camino a Avengers: Doomsday"><meta property="og:description" content="Las 120 películas, series y especiales que preparan Doomsday: de qué trata cada una, dónde verla en Argentina y cuánto te falta de maratón."><meta property="og:url" content="https://olidiazz.github.io/mapa-ucm/"><meta property="og:image" content="https://olidiazz.github.io/mapa-ucm/og-image.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="es_AR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Mapa del UCM · Camino a Avengers: Doomsday"><meta name="twitter:description" content="Las 120 obras que preparan Doomsday, ordenadas y explicadas. Marcá lo que viste y mirá cuánto te falta."><meta name="twitter:image" content="https://olidiazz.github.io/mapa-ucm/og-image.jpg"><meta name="twitter:creator" content="@Olidiazzz"><meta name="twitter:site" content="@Olidiazzz"><link rel="canonical" href="https://olidiazz.github.io/mapa-ucm/"></head>
+<meta property="og:type" content="website"><meta property="og:site_name" content="Mapa del UCM"><meta property="og:title" content="Mapa del UCM · Camino a Avengers: Doomsday"><meta property="og:description" content="Las 120 películas, series y especiales que preparan Doomsday: de qué trata cada una, dónde verla en Argentina y cuánto te falta de maratón."><meta property="og:url" content="https://olidiazz.github.io/mapa-ucm/"><meta property="og:image" content="https://olidiazz.github.io/mapa-ucm/og-image.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="es_AR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Mapa del UCM · Camino a Avengers: Doomsday"><meta name="twitter:description" content="Las 120 obras que preparan Doomsday, ordenadas y explicadas. Marcá lo que viste y mirá cuánto te falta."><meta name="twitter:image" content="https://olidiazz.github.io/mapa-ucm/og-image.jpg"><meta name="twitter:creator" content="@Olidiazzz"><meta name="twitter:site" content="@Olidiazzz"><link rel="canonical" href="https://olidiazz.github.io/mapa-ucm/"><script defer="" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon="{&quot;token&quot;:&quot;3328a971fcca466483d9e27c9ff8d161&quot;}"></script></head>
 <body>
 
 <header class="hero">
@@ -1428,6 +1428,11 @@ const $=s=>document.querySelector(s);
 const URL_PUBLICA = "https://olidiazz.github.io/mapa-ucm/";
 const CAFECITO    = "olikushgg";
 const TWITTER     = "Olidiazzz";
+/* Token de Cloudflare Web Analytics. Se inyecta SOLO en el index.html que se
+   publica: ni en este archivo de trabajo —para no contar tus propias visitas—
+   ni en la copia offline, que no tiene internet y no tiene por qué avisarle
+   nada a nadie. Sin cookies y sin identificar personas. */
+const CLOUDFLARE  = "3328a971fcca466483d9e27c9ff8d161";
 /* Cuándo revisaste el contenido por última vez. Es la única fecha que hay que tocar
    a mano: hacer que diga "actualizado hoy" sin haber mirado nada sería mentira.
    Bumpeala cuando agregues o corrijas títulos. */
@@ -1988,6 +1993,16 @@ function construirCopia({ posters, cssFuentes, modo }){
     });
     poner("property", metas); poner("name", nombradas);
     const can = document.createElement("link"); can.rel = "canonical"; can.href = base; head.appendChild(can);
+  }
+
+  /* Medición solo en la versión que se publica. La copia offline se queda
+     afuera a propósito: anda sin internet y sería raro que intentara reportar. */
+  if(CLOUDFLARE && modo === "liviano" && head){
+    const s = document.createElement("script");
+    s.defer = true;
+    s.src = "https://static.cloudflareinsights.com/beacon.min.js";
+    s.setAttribute("data-cf-beacon", JSON.stringify({ token: CLOUDFLARE }));
+    head.appendChild(s);
   }
 
   ["#lienzo","#stats","#modal","#aviso"].forEach(sel => { const el = doc.querySelector(sel); if(el) el.innerHTML = ""; });
