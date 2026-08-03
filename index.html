@@ -572,7 +572,7 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
 
 <header class="hero">
   <div class="wrap">
-    <div class="kicker">Saga del Multiverso · Fases 1 a 6 · <span id="kickerDias">FALTAN 136 DÍAS</span></div>
+    <div class="kicker">Saga del Multiverso · Fases 1 a 6 · <span id="kickerDias">FALTAN 137 DÍAS</span></div>
     <h1>Mapa del<span class="ucm">UCM</span></h1>
     <div class="sub" id="heroSub">La guía definitiva del <b>Universo Cinematográfico de Marvel</b></div>
 
@@ -704,7 +704,7 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
     <div class="kicker">Punto de convergencia</div>
     <h2>Avengers<br>Doomsday</h2>
     <p>18 de diciembre de 2026 · Fase 6 · dirigen Anthony y Joe Russo. Tres universos chocan: los héroes del UCM, los Cuatro Fantásticos de la Tierra‑828 y los X‑Men del cine de Fox, con Robert Downey Jr. como Víctor von Doom. Todo lo que está arriba desemboca acá.</p>
-    <div class="reloj" id="reloj">Faltan 136 días</div>
+    <div class="reloj" id="reloj">Faltan 137 días</div>
   </section>
 
   <footer>
@@ -2095,21 +2095,34 @@ window.addEventListener("load", () => {
   if(TMDB_AUTO && clave && !POSTERS.size) traerTodo();
 });
 
-const diasRestantes = () => Math.max(0, Math.ceil((new Date("2026-12-18T00:00:00") - new Date()) / 86400000));
-
 /* Todo lo que depende de la fecha se recalcula solo, sin tocar el archivo.
    Si quedara escrito en el HTML, una copia compartida mostraría para siempre
-   los días que faltaban el día que se exportó. */
-const ESTRENO = new Date("2026-12-18T00:00:00");
+   los días que faltaban el día que se exportó.
+   Se construye con new Date(año, mes, día) y no con una cadena ISO: así son
+   las 00:00 de la hora local, que para el público de acá es Argentina. */
+const ESTRENO     = new Date(2026, 11, 18);
+const DIA_DESPUES = new Date(2026, 11, 19);
 
-function faltaTexto(largo){
-  const ms = ESTRENO - new Date();
-  if(ms <= 0) return new Date() < new Date("2026-12-19T00:00:00") ? "Se estrena hoy" : "Ya está en cines";
-  const d = Math.floor(ms / 86400000), h = Math.floor(ms / 3600000) % 24, m = Math.floor(ms / 60000) % 60;
-  if(d > 7)  return "Faltan " + d + " días";
-  if(d >= 1) return "Falta" + (d > 1 ? "n " : " ") + d + (d > 1 ? " días" : " día") + (largo ? " y " + h + " h" : "");
-  if(h >= 1) return "Faltan " + h + " h " + m + " min";
-  return "Faltan " + m + " min";
+/* Días de calendario, medianoche contra medianoche. Antes se restaban los
+   milisegundos crudos y la fracción del día en curso hacía que un mismo
+   instante diera 136 o 137 según se truncara o se redondeara para arriba:
+   las dos cifras llegaron a aparecer juntas en pantalla. Del 3 de agosto al
+   18 de diciembre hay 137 días, y eso es lo que tiene que decir. */
+function diasRestantes(){
+  const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+  return Math.max(0, Math.round((ESTRENO - hoy) / 86400000));
+}
+
+/* Una sola fuente para los dos lugares donde se muestra la cuenta. Tuve una
+   versión con horas y minutos en los últimos días, pero contaba en tiempo real
+   mientras la cabecera contaba en días de calendario: el 16 de diciembre uno
+   decía "falta 1 día y 14 h" y el otro "2". Prefiero perder el detalle antes
+   que mostrar dos números distintos para lo mismo. */
+function faltaTexto(){
+  const ahora = new Date();
+  if(ahora >= ESTRENO) return ahora < DIA_DESPUES ? "Se estrena hoy" : "Ya está en cines";
+  const d = diasRestantes();
+  return d === 1 ? "Falta 1 día" : "Faltan " + d + " días";
 }
 
 function actualizarReloj(){
