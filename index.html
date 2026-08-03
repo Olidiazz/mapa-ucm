@@ -359,10 +359,19 @@ footer code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 
 .apoyo { border: 1px solid var(--borde); border-left: 3px solid #6F4E37; background: #0D1017; padding: 20px 22px; margin: 0 0 26px; }
 .apoyo h3 { color: #C8905A; }
 .apoyo p { margin: 0 0 14px; max-width: 76ch; }
-.cafecito { display: inline-flex; align-items: center; gap: 10px; background: #6F4E37; border: 1px solid #8A6446; color: #fff;
+/* Contorneado en reposo y relleno solo al pasar por encima: está disponible
+   sin gritar. Es una retribución voluntaria, no una compra. */
+.cafecito { display: inline-flex; align-items: center; gap: 10px; background: transparent; border: 1px solid #6F4E37; color: #C8905A;
   text-decoration: none; padding: 11px 20px; border-radius: 4px; transition: .18s;
   font-family: var(--cond); font-weight: 700; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; }
-.cafecito:hover { background: #8A6446; border-color: #A87C58; transform: translateY(-1px); }
+.cafecito:hover { background: #6F4E37; border-color: #8A6446; color: #fff; }
+
+.firma { border-top: 1px solid var(--borde); margin-top: 26px; padding-top: 22px; }
+.firma-1 { margin: 0 0 4px; font-family: var(--cond); font-weight: 700; font-size: 13.5px;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--gris); }
+.firma-1 a { color: var(--blanco); text-decoration: none; border-bottom: 2px solid var(--rojo); padding-bottom: 1px; }
+.firma-1 a:hover { color: var(--rojo); }
+.firma-2 { margin: 0; font-size: 14px; color: var(--gris2); max-width: 60ch; }
 .atribucion { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--borde);
   margin-top: 26px; padding-top: 20px; font-size: 13px; color: var(--gris2); }
 .atribucion svg { flex-shrink: 0; }
@@ -633,8 +642,9 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
 
   <footer>
     <section class="apoyo" id="apoyo">
-      <h3>Si te sirvió</h3>
-      <p id="apoyoTexto">Este mapa lo armé por gusto y es gratis para todos: no tiene publicidad, no te pide registrarte y no guarda nada tuyo fuera de tu propio navegador. Si te ahorró la tarde de research, podés invitarme un cafecito.</p>
+      <h3>Un aporte para la comunidad</h3>
+      <p>Este mapa lo armé porque quería tenerlo yo, y lo dejé abierto para todos. No tiene publicidad, no te pide que te registres y no guarda nada tuyo fuera de tu propio navegador.</p>
+      <p>Si te ahorró una tarde de averiguar dónde ver cada cosa, podés dejarme un cafecito: es completamente a voluntad y se agradece mucho. <strong>Compartirlo también ayuda un montón.</strong></p>
       <a class="cafecito" id="linkCafecito" href="https://cafecito.app/olikushgg" target="_blank" rel="noopener">☕ Invitame un cafecito</a>
     </section>
 
@@ -683,6 +693,11 @@ body.soltando::after { content: "Soltá las imágenes acá"; position: fixed; in
     <div class="atribucion">
       <svg width="52" height="21" viewBox="0 0 185 74" aria-hidden="true"><defs><linearGradient id="tg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#90cea1"></stop><stop offset=".56" stop-color="#3cbec9"></stop><stop offset="1" stop-color="#00b3e5"></stop></linearGradient></defs><rect width="185" height="74" rx="10" fill="url(#tg)"></rect><path fill="#0d253f" d="M28 25h-9v-7h26v7h-9v25h-8V25zm31-7h8l10 32h-8l-2-7H57l-2 7h-8l12-32zm6 19-3-11-3 11h6zm18-19h12c7 0 11 4 11 10 0 4-2 7-5 9l6 13h-9l-5-11h-2v11h-8V18zm11 15c3 0 4-1 4-3s-1-3-4-3h-3v6h3zm22-15h8v25h14v7h-22V18z"></path></svg>
       <span><span id="fechaDatos">Contenido revisado al 02/08/2026. </span>Las fichas, portadas y disponibilidad las provee <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB</a>. Este producto usa la API de TMDB pero no está avalado ni certificado por TMDB. Los pósters pertenecen a sus respectivos estudios y se usan con fines informativos.</span>
+    </div>
+
+    <div class="firma" id="firma">
+      <p class="firma-1">Hecho por <a id="firmaUsuario" href="https://x.com/Olidiazzz" target="_blank" rel="noopener">@Olidiazzz</a></p>
+      <p class="firma-2">Diseño y programación web. Si te gustó cómo funciona esto y tenés algo en mente, escribime por mensaje directo.</p>
     </div>
   </footer>
 </main>
@@ -2448,6 +2463,15 @@ function armarApoyo(){
   // Sin URL pública igual sirve: comparte el texto por el menú nativo del celular.
   $("#bCompartir").hidden = false;
 
+  /* La firma es lo único que convierte a alguien que usó el mapa en alguien
+     que sabe quién lo hizo y cómo encontrarlo. */
+  if(TWITTER){
+    $("#firma").hidden = false;
+    const a = $("#firmaUsuario");
+    a.textContent = "@" + TWITTER;
+    a.href = "https://x.com/" + encodeURIComponent(TWITTER);
+  }
+
   // En la versión liviana ofrecemos la autónoma para llevarse.
   if(MODO === "liviano" && URL_PUBLICA){
     const p = $("#bajarOffline");
@@ -2618,10 +2642,10 @@ function revisarHitos(){
   const n = uni.filter(o => vistos.has(o.n)).length;
   if(n === uni.length && hitosVistos < 2){
     hitosVistos = 2;
-    verGracias("¡Completaste " + (soloClave ? "el camino a Doomsday" : "las " + uni.length) + " y estás listo para el 18 de diciembre! Si este mapa te ordenó la maratón, me podés invitar un cafecito.");
+    verGracias("Completaste " + (soloClave ? "el camino a Doomsday" : "las " + uni.length) + ". Que alguien lo use hasta el final es lo mejor que le puede pasar a esto. Gracias.");
   } else if(n >= 20 && hitosVistos < 1){
     hitosVistos = 1;
-    verGracias("Ya llevás " + n + " títulos marcados. Si el mapa te está sirviendo, me podés invitar un cafecito ☕");
+    verGracias("Ya llevás " + n + " títulos marcados. Si te está sirviendo, me alegra un montón — y si querés, acá abajo hay cafecito.");
   }
 }
 
